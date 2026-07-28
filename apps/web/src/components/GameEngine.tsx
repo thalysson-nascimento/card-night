@@ -94,6 +94,17 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
     };
   }, []);
 
+  // Imperatively control Swiper touch movement permission to avoid React 19 re-render loops
+  useEffect(() => {
+    if (swiperRef.current) {
+      if (countdownFinished) {
+        swiperRef.current.enableTouchMove();
+      } else {
+        swiperRef.current.disableTouchMove();
+      }
+    }
+  }, [countdownFinished]);
+
   if (!mounted) return null;
 
   const currentPlayer = players[activeIdx % players.length] || "Jogador";
@@ -148,9 +159,8 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
       // Slide to next card
       if (swiperRef.current) {
         // Temporarily allow move to slide next
-        swiperRef.current.params.allowTouchMove = true;
+        swiperRef.current.enableTouchMove();
         swiperRef.current.slideNext();
-        swiperRef.current.params.allowTouchMove = countdownFinished;
       }
     }
   };
@@ -302,12 +312,13 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
         <div style={{ position: "relative" }}>
           <Swiper
             effect="cards"
-            grabCursor={countdownFinished}
             modules={[EffectCards]}
             className="swiper"
-            onSwiper={(swiper) => { swiperRef.current = swiper; }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              swiper.disableTouchMove();
+            }}
             onSlideChange={handleSlideChange}
-            allowTouchMove={countdownFinished}
           >
             {cards.map((card, i) => (
               <SwiperSlide key={card.id}>
