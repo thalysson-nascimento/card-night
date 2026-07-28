@@ -8,8 +8,8 @@
     ".": "./src/client.ts"
   },
   "scripts": {
-    "build": "prisma generate",
-    "db:generate": "prisma generate",
+    "build": "prisma generate && node copy-db.js",
+    "db:generate": "prisma generate && node copy-db.js",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts"
   },
