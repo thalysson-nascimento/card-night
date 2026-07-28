@@ -97,11 +97,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
   // Imperatively control Swiper touch movement permission to avoid React 19 re-render loops
   useEffect(() => {
     if (swiperRef.current) {
-      if (countdownFinished) {
-        swiperRef.current.enableTouchMove();
-      } else {
-        swiperRef.current.disableTouchMove();
-      }
+      swiperRef.current.allowTouchMove = countdownFinished;
     }
   }, [countdownFinished]);
 
@@ -159,7 +155,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
       // Slide to next card
       if (swiperRef.current) {
         // Temporarily allow move to slide next
-        swiperRef.current.enableTouchMove();
+        swiperRef.current.allowTouchMove = true;
         swiperRef.current.slideNext();
       }
     }
@@ -316,7 +312,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
             className="swiper"
             onSwiper={(swiper) => {
               swiperRef.current = swiper;
-              swiper.disableTouchMove();
+              swiper.allowTouchMove = false;
             }}
             onSlideChange={handleSlideChange}
           >
