@@ -1,0 +1,205 @@
+:root {
+  --background-dark: #050508;
+  --background-card: #0d0d12;
+  --card-border-back: #8a2be2;
+  --card-border-front: #ff007f;
+  
+  --primary-glow: rgba(138, 43, 226, 0.4);
+  --secondary-glow: rgba(255, 0, 127, 0.4);
+  
+  --color-purple: #8a2be2;
+  --color-pink: #ff007f;
+  --color-green: #39ff14;
+  --color-red: #ff3333;
+  --color-cyan: #00f0ff;
+  
+  --font-title: var(--font-space-grotesk), sans-serif;
+  --font-body: var(--font-outfit), sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background-dark);
+  color: #f1f1f5;
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animations */
+@keyframes pulse-purple {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.8);
+  }
+}
+
+@keyframes pulse-pink {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 0, 127, 0.8);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #08080c;
+}
+::-webkit-scrollbar-thumb {
+  background: #25163f;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-purple);
+}
+
+/* Card Flip Styles */
+.card-perspective {
+  perspective: 1200px;
+  width: 320px;
+  height: 460px;
+  margin: 0 auto;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #0d061a 0%, #170b2e 100%);
+  border: 2px solid var(--card-border-back);
+  animation: pulse-purple 3s infinite;
+}
+
+.card-front {
+  background: linear-gradient(135deg, #0c000c 0%, #1a0210 100%);
+  border: 2px solid var(--card-border-front);
+  transform: rotateY(180deg);
+  animation: pulse-pink 3s infinite;
+}
+
+/* Swiper overrides for Card Effect */
+.swiper {
+  width: 340px;
+  height: 520px;
+  padding: 20px 10px;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent !important;
+}
+
+/* Custom interactive inputs and buttons */
+.btn-neon {
+  background: transparent;
+  color: #fff;
+  border: 2px solid var(--color-purple);
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px var(--primary-glow);
+  text-transform: uppercase;
+}
+
+.btn-neon:hover {
+  background: var(--color-purple);
+  box-shadow: 0 0 20px var(--color-purple);
+  transform: translateY(-2px);
+}
+
+.btn-neon:active {
+  transform: translateY(1px);
+}
+
+.btn-neon-pink {
+  border-color: var(--color-pink);
+  box-shadow: 0 0 10px var(--secondary-glow);
+}
+
+.btn-neon-pink:hover {
+  background: var(--color-pink);
+  box-shadow: 0 0 20px var(--color-pink);
+}
+
+.input-neon {
+  background: rgba(13, 13, 18, 0.7);
+  border: 1px solid #332244;
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 16px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  outline: none;
+  width: 100%;
+}
+
+.input-neon:focus {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+}
+
+/* Glassmorphism containers */
+.glass-container {
+  background: rgba(15, 10, 25, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
