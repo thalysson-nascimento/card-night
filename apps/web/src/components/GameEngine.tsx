@@ -305,7 +305,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
         </div>
 
         {/* SWIPER CARD DECK */}
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", width: "100%", maxWidth: "340px", display: "flex", justifyContent: "center" }}>
           <Swiper
             effect="cards"
             cardsEffect={{
