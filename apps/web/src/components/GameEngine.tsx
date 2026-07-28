@@ -292,10 +292,21 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
       </header>
 
       {/* GAME CONTENT CONTAINER */}
-      <main style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "20px 10px", gap: "20px" }}>
+      <main style={{ 
+        flex: 1, 
+        display: "flex", 
+        flexDirection: "column", 
+        justifyContent: "space-around", 
+        alignItems: "center", 
+        padding: "15px 10px", 
+        gap: "10px",
+        width: "100%",
+        maxWidth: "480px",
+        margin: "0 auto"
+      }}>
         
         {/* CURRENT TURN CARD HEADER */}
-        <div style={{ textAlign: "center", marginBottom: "5px" }}>
+        <div style={{ textAlign: "center", margin: 0 }}>
           <p style={{ textTransform: "uppercase", fontSize: "12px", letterSpacing: "2px", color: "rgba(255,255,255,0.5)", marginBottom: "4px" }}>
             Desafio para:
           </p>
