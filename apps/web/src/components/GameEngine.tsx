@@ -34,7 +34,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
     players.reduce((acc, player) => ({ ...acc, [player]: 0 }), {})
   );
   
-  const [swiper, setSwiper] = useState<SwiperCore | null>(null);
+  const swiperRef = useRef<SwiperCore | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   
@@ -146,11 +146,11 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
       }, 500);
     } else {
       // Slide to next card
-      if (swiper) {
+      if (swiperRef.current) {
         // Temporarily allow move to slide next
-        swiper.params.allowTouchMove = true;
-        swiper.slideNext();
-        swiper.params.allowTouchMove = countdownFinished;
+        swiperRef.current.params.allowTouchMove = true;
+        swiperRef.current.slideNext();
+        swiperRef.current.params.allowTouchMove = countdownFinished;
       }
     }
   };
@@ -158,16 +158,21 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
   const handleSlideChange = (s: SwiperCore) => {
     const newIndex = s.activeIndex;
     
-    // Clear any running timer
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-    
-    // Reset state for new card
-    setActiveIdx(newIndex);
-    setIsCounting(false);
-    setCountdownFinished(false);
-    setCountdown(7);
+    setActiveIdx(prevIdx => {
+      if (prevIdx === newIndex) return prevIdx;
+      
+      // Clear any running timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      
+      // Reset state for new card
+      setIsCounting(false);
+      setCountdownFinished(false);
+      setCountdown(7);
+      
+      return newIndex;
+    });
   };
 
   const handleRestart = async () => {
@@ -181,8 +186,8 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
     setCountdownFinished(false);
     setScores(players.reduce((acc, player) => ({ ...acc, [player]: 0 }), {}));
     setGameOver(false);
-    if (swiper) {
-      swiper.slideTo(0, 0);
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(0, 0);
     }
   };
 
@@ -300,7 +305,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
             grabCursor={countdownFinished}
             modules={[EffectCards]}
             className="swiper"
-            onSwiper={setSwiper}
+            onSwiper={(swiper) => { swiperRef.current = swiper; }}
             onSlideChange={handleSlideChange}
             allowTouchMove={countdownFinished}
           >
