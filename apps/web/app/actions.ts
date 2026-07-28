@@ -15,7 +15,7 @@ export async function getRandomCards(limit: number = 30) {
 
     // Shuffle and pick 'limit' ids
     const shuffledIds = allIds
-      .map(c => c.id)
+      .map((c: { id: string }) => c.id)
       .sort(() => 0.5 - Math.random())
       .slice(0, limit);
       
