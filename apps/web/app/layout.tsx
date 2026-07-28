@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Outfit } from "next/font/google";
+import "swiper/css";
+import "swiper/css/effect-cards";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({

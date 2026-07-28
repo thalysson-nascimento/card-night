@@ -308,6 +308,9 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
         <div style={{ position: "relative" }}>
           <Swiper
             effect="cards"
+            cardsEffect={{
+              slideShadows: false,
+            }}
             modules={[EffectCards]}
             className="swiper"
             onSwiper={(swiper) => {

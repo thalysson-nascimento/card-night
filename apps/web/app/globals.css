@@ -79,7 +79,8 @@ body {
 /* Card Flip Styles */
 .card-perspective {
   perspective: 1200px;
-  width: 320px;
+  width: 100%;
+  max-width: 320px;
   height: 460px;
   margin: 0 auto;
 }
@@ -109,7 +110,7 @@ body {
 .card-back {
   background: linear-gradient(135deg, #0d061a 0%, #170b2e 100%);
   border: 2px solid var(--card-border-back);
-  animation: pulse-purple 3s infinite;
+  box-shadow: 0 0 25px rgba(138, 43, 226, 0.45);
   transform: rotateY(0deg);
   z-index: 2;
 }
@@ -118,7 +119,7 @@ body {
   background: linear-gradient(135deg, #0c000c 0%, #1a0210 100%);
   border: 2px solid var(--card-border-front);
   transform: rotateY(-180deg);
-  animation: pulse-pink 3s infinite;
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.45);
   z-index: 1;
 }
 
@@ -134,9 +135,11 @@ body {
 
 /* Swiper overrides for Card Effect */
 .swiper {
-  width: 340px;
+  width: 100%;
+  max-width: 340px;
   height: 520px;
   padding: 20px 10px;
+  margin: 0 auto;
 }
 
 .swiper-slide {
