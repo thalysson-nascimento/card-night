@@ -204,8 +204,8 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
     const winners = sortedRanking.filter(p => p[1] === maxScore).map(p => p[0]);
 
     return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "20px", background: "linear-gradient(to bottom, #070312, #020105)" }}>
-        <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "linear-gradient(to bottom, #070312, #020105)", overflow: "hidden" }}>
+        <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "95vh", overflowY: "auto" }}>
           
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
             <div style={{ background: "rgba(255, 215, 0, 0.15)", borderRadius: "50%", padding: "16px", border: "1px solid rgba(255, 215, 0, 0.4)", animation: "float 3s ease-in-out infinite" }}>
@@ -235,7 +235,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
             <h4 style={{ textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontSize: "12px", letterSpacing: "1px", marginBottom: "10px" }}>
               Classificação Geral
             </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "140px", overflowY: "auto", paddingRight: "4px" }}>
               {sortedRanking.map(([player, score], i) => (
                 <div key={player} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", borderRadius: "10px", background: i === 0 ? "rgba(255, 215, 0, 0.08)" : "rgba(255, 255, 255, 0.02)", border: i === 0 ? "1px solid rgba(255, 215, 0, 0.2)" : "1px solid rgba(255,255,255,0.05)" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -269,7 +269,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
   const isCurrentFlipped = !!flippedCards[activeIdx];
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at center, #0f0822 0%, #030206 100%)", paddingBottom: "30px" }}>
+    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at center, #0f0822 0%, #030206 100%)", overflow: "hidden" }}>
       
       {/* HEADER NAVBAR */}
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid rgba(138, 43, 226, 0.15)", background: "rgba(3, 2, 6, 0.8)", backdropFilter: "blur(8px)", position: "sticky", top: 0, zIndex: 100 }}>
@@ -316,7 +316,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
         </div>
 
         {/* SWIPER CARD DECK */}
-        <div style={{ position: "relative", width: "100%", maxWidth: "340px", display: "flex", justifyContent: "center" }}>
+        <div style={{ position: "relative", width: "90vw", maxWidth: "340px", display: "flex", justifyContent: "center" }}>
           <Swiper
             effect="cards"
             cardsEffect={{

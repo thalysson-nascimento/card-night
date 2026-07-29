@@ -95,9 +95,9 @@ export default function Home() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "20px", background: "radial-gradient(circle at center, #110729 0%, #030206 100%)" }}>
+    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "radial-gradient(circle at center, #110729 0%, #030206 100%)", overflow: "hidden" }}>
       
-      <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "28px" }}>
+      <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "95vh", overflowY: "auto" }}>
         
         {/* GAME TITLE / LOGO */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
