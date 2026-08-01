@@ -56,7 +56,7 @@ export default function Home() {
           
           const isAndroid = cap.getPlatform() === "android";
           const interstitialId = isAndroid
-            ? "ca-app-pub-8691674404508428/6895932094"
+            ? "ca-app-pub-8691674404508428/8379424132"
             : "ca-app-pub-3940256099942544/4411468910";
           
           await AdMob.prepareInterstitial({
@@ -69,7 +69,7 @@ export default function Home() {
           
           // Prepare the REWARDED VIDEO for when the user starts the game
           const rewardedId = isAndroid
-            ? "ca-app-pub-8691674404508428/7187041674"
+            ? "ca-app-pub-8691674404508428/2489517211"
             : "ca-app-pub-3940256099942544/1712485313";
           
           await AdMob.prepareRewardVideoAd({
@@ -82,7 +82,7 @@ export default function Home() {
           try {
             const isAndroid = cap.getPlatform() === "android";
             const rewardedId = isAndroid
-              ? "ca-app-pub-8691674404508428/7187041674"
+              ? "ca-app-pub-8691674404508428/2489517211"
               : "ca-app-pub-3940256099942544/1712485313";
             await AdMob.prepareRewardVideoAd({
               adId: rewardedId,
@@ -189,7 +189,7 @@ export default function Home() {
         try {
           const isAndroid = cap.getPlatform() === "android";
           const rewardedId = isAndroid
-            ? "ca-app-pub-8691674404508428/7187041674"
+            ? "ca-app-pub-8691674404508428/2489517211"
             : "ca-app-pub-3940256099942544/1712485313";
           await AdMob.prepareRewardVideoAd({
             adId: rewardedId,
