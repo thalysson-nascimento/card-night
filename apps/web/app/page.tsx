@@ -32,6 +32,67 @@ export default function Home() {
     }
   }, []);
 
+  // Initialize AdMob and show Interstitial Ad on App Open
+  useEffect(() => {
+    const initAdMob = async () => {
+      const cap = (window as any).Capacitor;
+      if (cap && cap.Plugins && cap.Plugins.AdMob) {
+        const AdMob = cap.Plugins.AdMob;
+        try {
+          await AdMob.initialize();
+          
+          const isAndroid = cap.getPlatform() === "android";
+          const adId = isAndroid
+            ? "ca-app-pub-3940256099942544/1033173712"
+            : "ca-app-pub-3940256099942544/4411468910";
+          
+          await AdMob.prepareInterstitial({
+            adId,
+            isTesting: true,
+          });
+
+          // Show on App Open
+          await AdMob.showInterstitial();
+          
+          // Prepare the next ad for when the user starts the game
+          await AdMob.prepareInterstitial({
+            adId,
+            isTesting: true,
+          });
+        } catch (e) {
+          console.error("AdMob initialization or app open ad failed:", e);
+          // Try to prepare fallback in case of errors
+          try {
+            const isAndroid = cap.getPlatform() === "android";
+            const adId = isAndroid
+              ? "ca-app-pub-3940256099942544/1033173712"
+              : "ca-app-pub-3940256099942544/4411468910";
+            await AdMob.prepareInterstitial({
+              adId,
+              isTesting: true,
+            });
+          } catch (err) {
+            console.error("Failed to prepare fallback ad:", err);
+          }
+        }
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      if ((window as any).Capacitor) {
+        initAdMob();
+      } else {
+        window.addEventListener("capacitorinit", initAdMob);
+      }
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("capacitorinit", initAdMob);
+      }
+    };
+  }, []);
+
   const handleAddPlayer = (e: React.FormEvent) => {
     e.preventDefault();
     const name = newPlayerName.trim();
@@ -75,6 +136,32 @@ export default function Home() {
         return;
       }
       setCards(selectedCards);
+
+      // Trigger ad if Capacitor is available
+      const cap = (window as any).Capacitor;
+      if (cap && cap.Plugins && cap.Plugins.AdMob) {
+        const AdMob = cap.Plugins.AdMob;
+        try {
+          await AdMob.showInterstitial();
+        } catch (e) {
+          console.error("Failed to show interstitial on game start:", e);
+        } finally {
+          // Always prepare the next ad in the background
+          try {
+            const isAndroid = cap.getPlatform() === "android";
+            const adId = isAndroid
+              ? "ca-app-pub-3940256099942544/1033173712"
+              : "ca-app-pub-3940256099942544/4411468910";
+            await AdMob.prepareInterstitial({
+              adId,
+              isTesting: true,
+            });
+          } catch (err) {
+            console.error("Failed to prepare next ad:", err);
+          }
+        }
+      }
+
       setGameState("playing");
     } catch (e) {
       console.error(e);
