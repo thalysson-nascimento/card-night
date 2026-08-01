@@ -56,12 +56,12 @@ export default function Home() {
           
           const isAndroid = cap.getPlatform() === "android";
           const interstitialId = isAndroid
-            ? "ca-app-pub-3940256099942544/1033173712"
+            ? "ca-app-pub-8691674404508428/6895932094"
             : "ca-app-pub-3940256099942544/4411468910";
           
           await AdMob.prepareInterstitial({
             adId: interstitialId,
-            isTesting: true,
+            isTesting: false,
           });
 
           // Show Interstitial on App Open
@@ -69,12 +69,12 @@ export default function Home() {
           
           // Prepare the REWARDED VIDEO for when the user starts the game
           const rewardedId = isAndroid
-            ? "ca-app-pub-3940256099942544/5224354917"
+            ? "ca-app-pub-8691674404508428/7187041674"
             : "ca-app-pub-3940256099942544/1712485313";
           
           await AdMob.prepareRewardVideoAd({
             adId: rewardedId,
-            isTesting: true,
+            isTesting: false,
           });
         } catch (e) {
           console.error("AdMob initialization or app open ad failed:", e);
@@ -82,11 +82,11 @@ export default function Home() {
           try {
             const isAndroid = cap.getPlatform() === "android";
             const rewardedId = isAndroid
-              ? "ca-app-pub-3940256099942544/5224354917"
+              ? "ca-app-pub-8691674404508428/7187041674"
               : "ca-app-pub-3940256099942544/1712485313";
             await AdMob.prepareRewardVideoAd({
               adId: rewardedId,
-              isTesting: true,
+              isTesting: false,
             });
           } catch (err) {
             console.error("Failed to prepare fallback rewarded ad:", err);
@@ -189,11 +189,11 @@ export default function Home() {
         try {
           const isAndroid = cap.getPlatform() === "android";
           const rewardedId = isAndroid
-            ? "ca-app-pub-3940256099942544/5224354917"
+            ? "ca-app-pub-8691674404508428/7187041674"
             : "ca-app-pub-3940256099942544/1712485313";
           await AdMob.prepareRewardVideoAd({
             adId: rewardedId,
-            isTesting: true,
+            isTesting: false,
           });
         } catch (err) {
           console.error("Failed to prepare next rewarded ad:", err);
