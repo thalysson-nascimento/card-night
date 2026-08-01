@@ -15,7 +15,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Ma Que P#&*! - Jogo de Cartas Picantes",
+  title: "CardsNight - Jogo de Cartas Picantes",
   description: "O jogo de cartas mais quente para a sua noite. 200 desafios picantes e contagem de 7 segundos.",
 };
 

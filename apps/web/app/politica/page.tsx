@@ -60,7 +60,7 @@ export default function PrivacyPolicy() {
           marginBottom: "35px"
         }}>
           <p style={{ margin: 0, color: "#475569", fontSize: "14px", fontWeight: 500 }}>
-            Nós do <strong>Ma Que P#&*! (Noite de Cartas)</strong> valorizamos e respeitamos a sua privacidade. Esta política detalha como lidamos com os seus dados, esclarecendo nosso compromisso em manter uma experiência de jogo offline segura e transparente para todos os participantes de faixa etária 18+.
+            Nós do <strong>CardsNight</strong> valorizamos e respeitamos a sua privacidade. Esta política detalha como lidamos com os seus dados, esclarecendo nosso compromisso em manter uma experiência de jogo offline segura e transparente para todos os participantes de faixa etária 18+.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ export default function PrivacyPolicy() {
             <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
               <EyeOff size={20} color="#7c3aed" style={{ flexShrink: 0, marginTop: "3px" }} />
               <p style={{ margin: 0 }}>
-                O aplicativo <strong>Ma Que P#&*! (Noite de Cartas)</strong> não possui servidores de banco de dados para cadastro ou rastreamento de perfis de usuários. Todos os dados que você insere no aplicativo (como os nomes dos jogadores cadastrados para a partida) são salvos de forma estritamente local no armazenamento do navegador ou dispositivo do próprio usuário (`localStorage`).
+                O aplicativo <strong>CardsNight</strong> não possui servidores de banco de dados para cadastro ou rastreamento de perfis de usuários. Todos os dados que você insere no aplicativo (como os nomes dos jogadores cadastrados para a partida) são salvos de forma estritamente local no armazenamento do navegador ou dispositivo do próprio usuário (`localStorage`).
               </p>
             </div>
             <p style={{ margin: 0 }}>

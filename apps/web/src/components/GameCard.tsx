@@ -29,7 +29,7 @@ export default function GameCard({ content, player, isFlipped, onFlip, index }: 
               <Flame size={72} color="#ff007f" style={{ filter: "drop-shadow(0 0 15px #ff007f)" }} />
             </div>
             <h2 style={{ fontFamily: "var(--font-title)", fontSize: "28px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", color: "#fff", textShadow: "0 0 10px rgba(138,43,226,0.6)" }}>
-              Ma Que P#&*!
+              CardsNight
             </h2>
             <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.6)", letterSpacing: "1px", textTransform: "uppercase" }}>
               Vez de <strong style={{ color: "#ff007f" }}>{player}</strong>

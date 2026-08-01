@@ -142,7 +142,7 @@ export default function TermsOfUse() {
               1. Introdução ao Aplicativo
             </h2>
             <p style={{ margin: 0 }}>
-              O aplicativo <strong>Ma Que P#&*! (Noite de Cartas)</strong> é um jogo social recreativo projetado para funcionar localmente e offline. Ele disponibiliza cartas virtuais contendo perguntas de resposta rápida (desafios de 7 segundos), dinâmicas interativas e propostas descontraídas para animar encontros sociais e festas. Ao abrir, acessar ou usar o aplicativo, você concorda formalmente em cumprir todas as regras contidas neste documento.
+              O aplicativo <strong>CardsNight</strong> é um jogo social recreativo projetado para funcionar localmente e offline. Ele disponibiliza cartas virtuais contendo perguntas de resposta rápida (desafios de 7 segundos), dinâmicas interativas e propostas descontraídas para animar encontros sociais e festas. Ao abrir, acessar ou usar o aplicativo, você concorda formalmente em cumprir todas as regras contidas neste documento.
             </p>
           </section>
 
@@ -187,7 +187,7 @@ export default function TermsOfUse() {
               4. Consumo Voluntário de Álcool e Substâncias
             </h2>
             <p style={{ marginBottom: "12px" }}>
-              Muitos jogos sociais são jogados em festas onde há consumo de bebidas alcoólicas. Contudo, <strong>o aplicativo Ma Que P#&*! não obriga, incentiva, patrocina ou promove o consumo de bebidas alcoólicas ou qualquer outra substância</strong>.
+              Muitos jogos sociais são jogados em festas onde há consumo de bebidas alcoólicas. Contudo, <strong>o aplicativo CardsNight não obriga, incentiva, patrocina ou promove o consumo de bebidas alcoólicas ou qualquer outra substância</strong>.
             </p>
             <p style={{ margin: 0 }}>
               Caso os jogadores optem voluntariamente por aplicar regras caseiras que envolvam a ingestão de álcool associada às falhas ou acertos no jogo, eles declaram expressamente fazê-lo de forma consciente, autônoma e respeitando seus próprios limites físicos e de saúde. Reiteramos que a responsabilidade por qualquer dano à integridade corporal decorrente da ingestão exagerada de substâncias é única e exclusiva dos próprios participantes.
