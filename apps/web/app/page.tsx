@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Flame, Plus, Trash2, ShieldAlert } from "lucide-react";
-import { getRandomCards } from "./actions";
+import { Flame, Plus, ShieldAlert, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import GameEngine from "../src/components/GameEngine";
+import { getRandomCards } from "./actions";
 
 export default function Home() {
   const [gameState, setGameState] = useState<"menu" | "playing">("menu");
