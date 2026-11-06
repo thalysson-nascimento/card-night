@@ -48,10 +48,10 @@ export default function TermsOfUse() {
           </h1>
         </div>
         <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "30px" }}>
-          Última atualização: 1 de Agosto de 2026
+          Última atualização: 5 de Novembro de 2026
         </p>
 
-        {/* Alert Box: 18+ Warning & No Liability */}
+        {/* Classification notice and liability disclaimer */}
         <div style={{
           backgroundColor: "#fff1f2",
           borderLeft: "4px solid #f43f5e",
@@ -64,10 +64,10 @@ export default function TermsOfUse() {
           <ShieldAlert size={24} color="#f43f5e" style={{ flexShrink: 0, marginTop: "2px" }} />
           <div>
             <h4 style={{ margin: "0 0 6px 0", color: "#9f1239", fontSize: "16px", fontWeight: 700 }}>
-              AVISO IMPORTANTE: Classificação 18+ e Limitação de Responsabilidade
+              AVISO IMPORTANTE: Classificação Indicativa 12 anos e Limitação de Responsabilidade
             </h4>
             <p style={{ margin: 0, color: "#be123c", fontSize: "14px", fontWeight: 500 }}>
-              Este aplicativo é direcionado <strong>exclusivamente para maiores de 18 anos</strong>. O conteúdo das cartas e desafios envolve temas adultos, íntimos e humorísticos. Os desenvolvedores e criadores <strong>não se responsabilizam</strong> por quaisquer ações, condutas, incidentes, danos físicos, morais ou de qualquer outra natureza decorrentes do uso desta aplicação.
+              A classificação indicativa exibida para este aplicativo na Google Play é <strong>12 anos</strong>. Pais e responsáveis devem avaliar se o conteúdo e as atividades são adequados. Os desenvolvedores e criadores <strong>não se responsabilizam</strong> por ações ou danos decorrentes do uso da aplicação.
             </p>
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function TermsOfUse() {
             </li>
             <li>
               <a href="#elegibilidade" style={{ color: "#7c3aed", textDecoration: "none", fontWeight: 600 }}>
-                2. Restrição de Idade e Elegibilidade (18+)
+                2. Classificação Indicativa e Elegibilidade (12 anos)
               </a>
             </li>
             <li>
@@ -149,13 +149,13 @@ export default function TermsOfUse() {
           {/* Section 2 */}
           <section id="elegibilidade">
             <h2 style={{ fontSize: "20px", color: "#0f172a", fontWeight: 800, marginTop: 0, marginBottom: "12px", borderBottom: "1px solid #e2e8f0", paddingBottom: "8px" }}>
-              2. Restrição de Idade e Elegibilidade (18+)
+              2. Classificação Indicativa e Elegibilidade (12 anos)
             </h2>
             <p style={{ marginBottom: "12px" }}>
-              Devido à natureza dos temas abordados pelas cartas — que incluem brincadeiras de cunho adulto, insinuações, confissões íntimas e piadas de duplo sentido —, o uso desta ferramenta é <strong>estritamente restrito a indivíduos com idade mínima de 18 anos</strong> (ou a idade de maioridade legal na sua jurisdição).
+              A classificação indicativa informada para o aplicativo na Google Play é <strong>12 anos</strong>. O aplicativo não solicita confirmação de idade para iniciar uma partida. Pais e responsáveis devem avaliar a adequação do conteúdo e acompanhar o uso por menores, conforme necessário.
             </p>
             <p style={{ margin: 0 }}>
-              Se você tem menos de 18 anos, deve desinstalar e fechar o aplicativo imediatamente. Ao continuar, declarar-se maior de idade e utilizar o sistema, você garante sob as penas da lei e civilmente que atende a esta exigência de elegibilidade.
+              Todos os participantes devem jogar voluntariamente, respeitar os limites uns dos outros e seguir as leis e orientações aplicáveis à sua localidade.
             </p>
           </section>
 

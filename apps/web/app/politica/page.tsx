@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
           </h1>
         </div>
         <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "30px" }}>
-          Última atualização: 1 de Agosto de 2026
+          Última atualização: 5 de Novembro de 2026
         </p>
 
         {/* Introduction Box */}
@@ -60,7 +60,7 @@ export default function PrivacyPolicy() {
           marginBottom: "35px"
         }}>
           <p style={{ margin: 0, color: "#475569", fontSize: "14px", fontWeight: 500 }}>
-            Nós do <strong>CardsNight</strong> valorizamos e respeitamos a sua privacidade. Esta política detalha como lidamos com os seus dados, esclarecendo nosso compromisso em manter uma experiência de jogo offline segura e transparente para todos os participantes de faixa etária 18+.
+            Nós do <strong>CardsNight</strong> valorizamos e respeitamos a sua privacidade. Esta política detalha como lidamos com os seus dados e esclarece nosso compromisso com uma experiência de jogo segura e transparente.
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export default function PrivacyPolicy() {
             </li>
             <li>
               <a href="#idade" style={{ color: "#7c3aed", textDecoration: "none", fontWeight: 600 }}>
-                4. Classificação Indicativa (Uso Exclusivo 18+)
+                4. Classificação Indicativa (12 anos)
               </a>
             </li>
             <li>
@@ -178,10 +178,10 @@ export default function PrivacyPolicy() {
           {/* Section 4 */}
           <section id="idade">
             <h2 style={{ fontSize: "20px", color: "#0f172a", fontWeight: 800, marginTop: 0, marginBottom: "12px", borderBottom: "1px solid #e2e8f0", paddingBottom: "8px" }}>
-              4. Classificação Indicativa (Uso Exclusivo 18+)
+              4. Classificação Indicativa (12 anos)
             </h2>
             <p style={{ margin: 0 }}>
-              Tendo em vista o teor das piadas, questionamentos íntimos e dinâmicas contidas em nossas cartas, <strong>o jogo é direcionado e utilizável exclusivamente por pessoas com mais de 18 anos de idade</strong>. Nós não coletamos intencionalmente dados de crianças ou adolescentes menores de 18 anos. Se tomarmos conhecimento de que um menor de idade está usando o app de forma indevida, orientamos os pais ou responsáveis a cessarem imediatamente o acesso.
+              A classificação indicativa informada para o aplicativo na Google Play é <strong>12 anos</strong>. O aplicativo não solicita data de nascimento nem confirmação de idade. Os nomes inseridos nas partidas ficam armazenados localmente no dispositivo, conforme descrito na seção 1; os dados tratados pela rede de anúncios Google AdMob estão descritos na seção 2. Pais e responsáveis devem avaliar a adequação do aplicativo para menores sob seus cuidados.
             </p>
           </section>
 

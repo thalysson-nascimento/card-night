@@ -14,10 +14,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [is18ModalOpen, setIs18ModalOpen] = useState(false);
   const [isPromoAdModalOpen, setIsPromoAdModalOpen] = useState(false);
 
-  // Load players from localStorage and check 18+ consent on client side mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("mqp_players");
@@ -35,12 +33,6 @@ export default function Home() {
         }
       } else {
         setPlayers(["Jogador 1", "Jogador 2"]);
-      }
-
-      // Check 18+ consent
-      const consent = localStorage.getItem("mqp_18_consent");
-      if (consent !== "true") {
-        setIs18ModalOpen(true);
       }
     }
   }, []);
@@ -316,106 +308,6 @@ export default function Home() {
           Política de Privacidade
         </Link>
       </div>
-
-      {/* 18+ MODAL */}
-      {is18ModalOpen && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100dvh",
-          backgroundColor: "rgba(3, 2, 6, 0.96)",
-          zIndex: 9999,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px"
-        }}>
-          <div className="glass-container" style={{
-            width: "100%",
-            maxWidth: "420px",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            padding: "30px",
-            border: "1px solid rgba(255, 0, 127, 0.3)",
-            boxShadow: "0 0 30px rgba(255, 0, 127, 0.2)",
-            background: "rgba(20, 10, 35, 0.75)",
-            backdropFilter: "blur(20px)",
-            borderRadius: "16px"
-          }}>
-            <Flame size={48} color="#ff007f" style={{ margin: "0 auto", filter: "drop-shadow(0 0 10px #ff007f)" }} />
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "1px", margin: 0 }}>
-              Verificação de Idade
-            </h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Este aplicativo contém desafios, perguntas picantes e dinâmicas voltadas exclusivamente para o público adulto.
-            </p>
-            <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Ao continuar, você confirma que possui <strong>18 anos ou mais</strong> e concorda com os nossos{" "}
-              <Link
-                href="/termos"
-                style={{
-                  color: "#ff007f",
-                  textDecoration: "underline",
-                  fontWeight: 600,
-                  fontSize: "14px"
-                }}
-              >
-                Termos de Uso
-              </Link>{" "}
-              e{" "}
-              <Link
-                href="/politica"
-                style={{
-                  color: "#ff007f",
-                  textDecoration: "underline",
-                  fontWeight: 600,
-                  fontSize: "14px"
-                }}
-              >
-                Política de Privacidade
-              </Link>.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
-              <button
-                className="btn-neon btn-neon-pink"
-                style={{ width: "100%", padding: "14px", fontSize: "16px", fontWeight: 700 }}
-                onClick={() => {
-                  localStorage.setItem("mqp_18_consent", "true");
-                  setIs18ModalOpen(false);
-                }}
-              >
-                Sim, sou maior de 18 anos
-              </button>
-              <button
-                type="button"
-                style={{
-                  width: "100%",
-                  padding: "14px",
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  backgroundColor: "transparent",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  color: "rgba(255,255,255,0.6)",
-                  borderRadius: "8px",
-                  cursor: "pointer"
-                }}
-                onClick={() => {
-                  alert("Você precisa ser maior de 18 anos para acessar este aplicativo.");
-                  if (typeof window !== "undefined") {
-                    window.location.href = "https://www.google.com";
-                  }
-                }}
-              >
-                Não, sair
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* PROMO AD MODAL */}
       {isPromoAdModalOpen && (
