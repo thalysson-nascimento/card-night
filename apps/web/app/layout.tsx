@@ -15,8 +15,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "CardsNight - Jogo de Cartas Picantes",
+  title: "Cards Night - Jogo de Cartas Picantes",
   description: "O jogo de cartas mais quente para a sua noite. 200 desafios picantes e contagem de 7 segundos.",
+  icons: {
+    icon: "/cards-night-icon.png",
+    apple: "/cards-night-icon.png",
+  },
 };
 
 export default function RootLayout({

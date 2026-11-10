@@ -1,8 +1,9 @@
 "use client";
 
-import { Flame, Plus, ShieldAlert, Trash2 } from "lucide-react";
+import { Plus, ShieldAlert, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import GameEngine from "../src/components/GameEngine";
 import { getRandomCards } from "./actions";
 
@@ -215,10 +216,17 @@ export default function Home() {
         {/* GAME TITLE / LOGO */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
           <div style={{ animation: "float 4s ease-in-out infinite", position: "relative" }}>
-            <Flame size={72} color="#ff007f" style={{ filter: "drop-shadow(0 0 15px #ff007f)" }} />
+            <Image
+              src="/cards-night-icon.png"
+              alt="Cards Night"
+              width={112}
+              height={112}
+              priority
+              style={{ filter: "drop-shadow(0 0 15px rgba(255, 0, 127, 0.6))" }}
+            />
           </div>
           <h1 style={{ fontFamily: "var(--font-title)", fontSize: "40px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", color: "#fff", textShadow: "0 0 15px rgba(255,0,127,0.7)" }}>
-            CardsNight
+            Cards Night
           </h1>
           <p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "14px", lineHeight: "1.5" }}>
             O jogo de cartas mais picante e divertido para animar sua noite. Contagens rápidas de 7 segundos e desafios intensos.

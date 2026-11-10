@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Flame, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Sparkles } from "lucide-react";
 
 interface GameCardProps {
   content: string;
@@ -21,15 +22,27 @@ export default function GameCard({ content, player, isFlipped, onFlip, index }: 
             <span style={{ fontSize: "14px", fontWeight: 600, color: "rgba(255, 255, 255, 0.4)", textTransform: "uppercase", letterSpacing: "1.5px" }}>
               Carta {index + 1}
             </span>
-            <Flame size={20} color="#8a2be2" style={{ filter: "drop-shadow(0 0 5px #8a2be2)" }} />
+            <Image
+              src="/cards-night-icon.png"
+              alt=""
+              width={24}
+              height={24}
+              style={{ filter: "drop-shadow(0 0 5px rgba(138, 43, 226, 0.7))" }}
+            />
           </div>
           
           <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "20px" }}>
             <div style={{ position: "relative" }}>
-              <Flame size={72} color="#ff007f" style={{ filter: "drop-shadow(0 0 15px #ff007f)" }} />
+              <Image
+                src="/cards-night-icon.png"
+                alt="Cards Night"
+                width={96}
+                height={96}
+                style={{ filter: "drop-shadow(0 0 15px rgba(255, 0, 127, 0.6))" }}
+              />
             </div>
             <h2 style={{ fontFamily: "var(--font-title)", fontSize: "28px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", color: "#fff", textShadow: "0 0 10px rgba(138,43,226,0.6)" }}>
-              CardsNight
+              Cards Night
             </h2>
             <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.6)", letterSpacing: "1px", textTransform: "uppercase" }}>
               Vez de <strong style={{ color: "#ff007f" }}>{player}</strong>

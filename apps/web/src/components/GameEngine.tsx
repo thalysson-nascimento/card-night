@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from "react";
 import SwiperCore from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper/modules";
-import { Flame, Play, Check, X, Award, RotateCcw, Home, Volume2, VolumeX, ShieldAlert } from "lucide-react";
+import { Play, Check, X, Award, RotateCcw, Home, Volume2, VolumeX, ShieldAlert } from "lucide-react";
+import Image from "next/image";
 import GameCard from "./GameCard";
 import { getRandomCards } from "../../app/actions";
 
@@ -274,9 +275,15 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
       {/* HEADER NAVBAR */}
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid rgba(138, 43, 226, 0.15)", background: "rgba(3, 2, 6, 0.8)", backdropFilter: "blur(8px)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }} onClick={onBackToMenu}>
-          <Flame size={24} color="#ff007f" style={{ filter: "drop-shadow(0 0 5px #ff007f)", cursor: "pointer" }} />
+          <Image
+            src="/cards-night-icon.png"
+            alt="Cards Night"
+            width={36}
+            height={36}
+            style={{ filter: "drop-shadow(0 0 5px rgba(255, 0, 127, 0.6))", cursor: "pointer" }}
+          />
           <span style={{ fontFamily: "var(--font-title)", fontWeight: 800, fontSize: "18px", letterSpacing: "1px", cursor: "pointer" }}>
-            MQP
+            Cards Night
           </span>
         </div>
         
