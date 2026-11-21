@@ -20,7 +20,7 @@ interface GameEngineProps {
 
 export default function GameEngine({ initialCards, players, onBackToMenu }: GameEngineProps) {
   const [mounted, setMounted] = useState(false);
-  const [showLegalConsent, setShowLegalConsent] = useState(false);
+  const [showLegalConsent, setShowLegalConsent] = useState(true);
   const [cards, setCards] = useState(initialCards);
   const [activeIdx, setActiveIdx] = useState(0);
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
@@ -91,7 +91,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
   useEffect(() => {
     setMounted(true);
     try {
-      setShowLegalConsent(localStorage.getItem("cards_night_legal_accepted") !== "true");
+      setShowLegalConsent(localStorage.getItem("cards_night_legal_consent_v1") !== "true");
     } catch {
       setShowLegalConsent(true);
     }
@@ -102,7 +102,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
 
   const acceptLegalTerms = () => {
     try {
-      localStorage.setItem("cards_night_legal_accepted", "true");
+      localStorage.setItem("cards_night_legal_consent_v1", "true");
     } catch {
       // The modal is closed for this session even if localStorage is unavailable.
     }
