@@ -2,7 +2,6 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import GameEngine from "../src/components/GameEngine";
 import { getRandomCards } from "./actions";
@@ -329,9 +328,21 @@ export default function Home() {
         </div>
 
         <footer className={styles.homeFooter}>
-          <Link href="/termos">Termos de Uso</Link>
+          <a
+            href="https://cardsnigth.blogspot.com/#termos"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Termos de Uso
+          </a>
           <span aria-hidden="true">•</span>
-          <Link href="/politica">Política de Privacidade</Link>
+          <a
+            href="https://cardsnigth.blogspot.com/#privacidade"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Política de Privacidade
+          </a>
         </footer>
       </main>
 

@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import { ArrowLeft, BookOpen, Scale, ShieldAlert } from "lucide-react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Scale, AlertOctagon, HeartHandshake, ShieldAlert } from "lucide-react";
 
 export default function TermsOfUse() {
   return (
@@ -142,7 +141,7 @@ export default function TermsOfUse() {
               1. Introdução ao Aplicativo
             </h2>
             <p style={{ margin: 0 }}>
-              O aplicativo <strong>Cards Night</strong> é um jogo social recreativo projetado para funcionar localmente e offline. Ele disponibiliza cartas virtuais contendo perguntas de resposta rápida (desafios de 7 segundos), dinâmicas interativas e propostas descontraídas para animar encontros sociais e festas. Ao abrir, acessar ou usar o aplicativo, você concorda formalmente em cumprir todas as regras contidas neste documento.
+              O aplicativo <strong>Cards Night</strong> é um jogo social que disponibiliza cartas virtuais contendo perguntas de resposta rápida (desafios de 7 segundos), dinâmicas interativas e propostas descontraídas para animar encontros sociais e festas. Ao abrir, acessar ou usar o aplicativo, você concorda formalmente em cumprir todas as regras contidas neste documento.
             </p>
           </section>
 
