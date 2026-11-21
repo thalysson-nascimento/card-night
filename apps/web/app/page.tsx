@@ -17,6 +17,9 @@ export default function Home() {
   const [isInputShaking, setIsInputShaking] = useState(false);
 
   const [isPromoAdModalOpen, setIsPromoAdModalOpen] = useState(false);
+  const [isPlayerRewardModalOpen, setIsPlayerRewardModalOpen] = useState(false);
+  const [isPlayerRewardLoading, setIsPlayerRewardLoading] = useState(false);
+  const [extraPlayersUnlocked, setExtraPlayersUnlocked] = useState(false);
   const [showLegalConsent, setShowLegalConsent] = useState(() => {
     if (typeof window === "undefined") return false;
 
@@ -33,6 +36,9 @@ export default function Home() {
     if (typeof window !== "undefined") {
       try {
         setShowLegalConsent(localStorage.getItem("cards_night_legal_consent_v1") !== "true");
+        setExtraPlayersUnlocked(
+          localStorage.getItem("cards_night_extra_players_v1") === "true"
+        );
       } catch {
         setShowLegalConsent(true);
       }
@@ -94,7 +100,7 @@ export default function Home() {
           
           await AdMob.prepareInterstitial({
             adId: interstitialId,
-            isTesting: false,
+            isTesting: true,
           });
 
           // Show Interstitial on App Open
@@ -107,7 +113,7 @@ export default function Home() {
           
           await AdMob.prepareRewardVideoAd({
             adId: rewardedId,
-            isTesting: false,
+            isTesting: true,
           });
         } catch (e) {
           console.error("AdMob initialization or app open ad failed:", e);
@@ -119,7 +125,7 @@ export default function Home() {
               : "ca-app-pub-3940256099942544/1712485313";
             await AdMob.prepareRewardVideoAd({
               adId: rewardedId,
-              isTesting: false,
+              isTesting: true,
             });
           } catch (err) {
             console.error("Failed to prepare fallback rewarded ad:", err);
@@ -155,8 +161,12 @@ export default function Home() {
       setErrorMsg("Esse nome de jogador já existe.");
       return;
     }
-    if (players.length >= 16) {
-      setErrorMsg("Limite máximo de 16 jogadores atingido.");
+    if (players.length >= 6 && !extraPlayersUnlocked) {
+      setIsPlayerRewardModalOpen(true);
+      return;
+    }
+    if (players.length >= 12) {
+      setErrorMsg("Limite máximo de 12 jogadores atingido.");
       return;
     }
     const updated = [...players, name];
@@ -241,7 +251,7 @@ export default function Home() {
             : "ca-app-pub-3940256099942544/1712485313";
           await AdMob.prepareRewardVideoAd({
             adId: rewardedId,
-            isTesting: false,
+            isTesting: true,
           });
         } catch (err) {
           console.error("Failed to prepare next rewarded ad:", err);
@@ -251,6 +261,76 @@ export default function Home() {
 
     // Start game in either case
     await proceedToGame();
+  };
+
+  const handleUnlockExtraPlayers = async () => {
+    const cap = (window as any).Capacitor;
+    if (!cap?.Plugins?.AdMob) {
+      setErrorMsg("Os vídeos recompensados estão disponíveis no aplicativo.");
+      return;
+    }
+
+    setIsPlayerRewardLoading(true);
+    const AdMob = cap.Plugins.AdMob;
+    let rewardListener: { remove: () => Promise<void> } | null = null;
+    let rewardConfirmed = false;
+
+    try {
+      const isAndroid = cap.getPlatform() === "android";
+      const rewardedId = isAndroid
+        ? "ca-app-pub-8691674404508428/2489517211"
+        : "ca-app-pub-3940256099942544/1712485313";
+
+      await AdMob.prepareRewardVideoAd({
+        adId: rewardedId,
+        isTesting: true,
+      });
+
+      if (typeof AdMob.addListener === "function") {
+        rewardListener = await AdMob.addListener(
+          "onRewardedVideoAdReward",
+          () => {
+            rewardConfirmed = true;
+          }
+        );
+      }
+
+      const rewardResult = await AdMob.showRewardVideoAd();
+      if (rewardResult?.amount || rewardResult?.type) {
+        rewardConfirmed = true;
+      }
+
+      if (!rewardConfirmed) {
+        setErrorMsg("Assista ao vídeo até o fim para liberar mais jogadores.");
+        return;
+      }
+
+      localStorage.setItem("cards_night_extra_players_v1", "true");
+      setExtraPlayersUnlocked(true);
+      setIsPlayerRewardModalOpen(false);
+      setErrorMsg("Mais 6 vagas desbloqueadas!");
+    } catch (error) {
+      console.error("Failed to unlock extra player slots:", error);
+      setErrorMsg("Não foi possível iniciar o vídeo. Tente novamente.");
+    } finally {
+      if (rewardListener) {
+        await rewardListener.remove().catch(() => undefined);
+      }
+      setIsPlayerRewardLoading(false);
+
+      try {
+        const isAndroid = cap.getPlatform() === "android";
+        const rewardedId = isAndroid
+          ? "ca-app-pub-8691674404508428/2489517211"
+          : "ca-app-pub-3940256099942544/1712485313";
+        await AdMob.prepareRewardVideoAd({
+          adId: rewardedId,
+          isTesting: true,
+        });
+      } catch {
+        // The next rewarded ad can be prepared when the app is used again.
+      }
+    }
   };
 
   if (gameState === "playing") {
@@ -331,10 +411,10 @@ export default function Home() {
               <span className={`${styles.statusDot} ${players.length >= 2 ? styles.statusReady : styles.statusWaiting}`} />
               <p className={players.length >= 2 ? styles.statusTextReady : styles.statusTextWaiting}>
                 {players.length >= 2
-                  ? `${players.length} jogadores prontos • Mínimo de 2 jogadores atingido`
+                  ? `${players.length}/${extraPlayersUnlocked ? 12 : 6} jogadores prontos • ${extraPlayersUnlocked ? "Limite ampliado" : "Assista ao vídeo para adicionar até 12"}`
                   : players.length === 0
-                    ? "Mínimo de 2 jogadores para iniciar a partida"
-                    : "Adicione mais 1 jogador para iniciar (mínimo 2)"}
+                    ? `Mínimo de 2 jogadores para iniciar • Até ${extraPlayersUnlocked ? 12 : 6}`
+                    : `Adicione mais ${2 - players.length} jogador(es) para iniciar • Até ${extraPlayersUnlocked ? 12 : 6}`}
               </p>
             </div>
 
@@ -458,6 +538,92 @@ export default function Home() {
             >
               Aceitar termos
             </button>
+          </div>
+        </div>
+      )}
+
+      {isPlayerRewardModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="player-reward-title"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+            background: "rgba(3, 2, 6, 0.9)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          <div
+            className="glass-container"
+            style={{
+              width: "100%",
+              maxWidth: "420px",
+              boxSizing: "border-box",
+              padding: "30px",
+              border: "1px solid rgba(138, 43, 226, 0.3)",
+              borderRadius: "16px",
+              background: "rgba(20, 10, 35, 0.92)",
+              boxShadow: "0 0 30px rgba(138, 43, 226, 0.2)",
+              textAlign: "center",
+            }}
+          >
+            <h2
+              id="player-reward-title"
+              style={{
+                margin: "0",
+                color: "#fff",
+                fontSize: "22px",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+              }}
+            >
+              Mais 6 jogadores
+            </h2>
+            <p
+              style={{
+                margin: "16px 0 20px",
+                color: "rgba(255, 255, 255, 0.7)",
+                lineHeight: 1.6,
+              }}
+            >
+              Você atingiu o limite de 6 jogadores. Assista ao vídeo recompensado até o fim para adicionar mais 6 e chegar ao limite de 12.
+            </p>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                type="button"
+                className="btn-neon"
+                disabled={isPlayerRewardLoading}
+                style={{ flex: 1, minHeight: "52px", justifyContent: "center" }}
+                onClick={handleUnlockExtraPlayers}
+              >
+                {isPlayerRewardLoading ? "Abrindo vídeo..." : "Assistir vídeo"}
+              </button>
+              <button
+                type="button"
+                disabled={isPlayerRewardLoading}
+                style={{
+                  flex: 1,
+                  minHeight: "52px",
+                  padding: "14px",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  borderRadius: "8px",
+                  background: "transparent",
+                  color: "rgba(255, 255, 255, 0.6)",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                }}
+                onClick={() => setIsPlayerRewardModalOpen(false)}
+              >
+                Voltar
+              </button>
+            </div>
           </div>
         </div>
       )}
