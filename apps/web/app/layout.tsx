@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Outfit } from "next/font/google";
+import { Montserrat, Outfit, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "swiper/css";
 import "swiper/css/effect-cards";
 import "./globals.css";
@@ -12,6 +12,16 @@ const spaceGrotesk = Space_Grotesk({
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-home-montserrat",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-home-jakarta",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" style={{ backgroundColor: "#050507", color: "#ededef" }}>
-      <body className={`${spaceGrotesk.variable} ${outfit.variable}`} style={{ margin: 0, padding: 0 }}>
+      <body className={`${spaceGrotesk.variable} ${outfit.variable} ${montserrat.variable} ${plusJakartaSans.variable}`} style={{ margin: 0, padding: 0 }}>
         {children}
       </body>
     </html>

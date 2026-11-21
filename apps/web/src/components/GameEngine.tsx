@@ -5,7 +5,6 @@ import SwiperCore from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards } from "swiper/modules";
 import { Play, Check, X, Award, RotateCcw, Home, Volume2, VolumeX, ShieldAlert } from "lucide-react";
-import Image from "next/image";
 import GameCard from "./GameCard";
 import { getRandomCards } from "../../app/actions";
 
@@ -205,14 +204,14 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
     const winners = sortedRanking.filter(p => p[1] === maxScore).map(p => p[0]);
 
     return (
-      <div style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "linear-gradient(to bottom, #070312, #020105)", overflow: "hidden" }}>
+      <div className="game-screen" style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "linear-gradient(to bottom, #070312, #020105)", overflow: "hidden" }}>
         <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "95vh", overflowY: "auto" }}>
           
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
             <div style={{ background: "rgba(255, 215, 0, 0.15)", borderRadius: "50%", padding: "16px", border: "1px solid rgba(255, 215, 0, 0.4)", animation: "float 3s ease-in-out infinite" }}>
               <Award size={64} color="#ffd700" style={{ filter: "drop-shadow(0 0 10px #ffd700)" }} />
             </div>
-            <h1 style={{ fontFamily: "var(--font-title)", fontSize: "32px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", background: "linear-gradient(to right, #ffd700, #ff8c00)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <h1 style={{ fontFamily: "var(--font-home-jakarta), sans-serif", fontSize: "32px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", background: "linear-gradient(to right, #ffd700, #ff8c00)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Fim de Jogo!
             </h1>
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px" }}>
@@ -221,7 +220,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
           </div>
 
           <div style={{ background: "rgba(255, 255, 255, 0.03)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(255,255,255,0.05)" }}>
-            <h3 style={{ textTransform: "uppercase", color: "#ffd700", letterSpacing: "2px", fontSize: "16px", marginBottom: "15px", fontFamily: "var(--font-title)" }}>
+            <h3 style={{ textTransform: "uppercase", color: "#ffd700", letterSpacing: "2px", fontSize: "16px", marginBottom: "15px", fontFamily: "var(--font-home-jakarta), sans-serif" }}>
               🏆 Vencedor(es) 🏆
             </h3>
             <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "10px", fontSize: "24px", fontWeight: 700, color: "#fff" }}>
@@ -270,22 +269,18 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
   const isCurrentFlipped = !!flippedCards[activeIdx];
 
   return (
-    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at center, #0f0822 0%, #030206 100%)", overflow: "hidden" }}>
+    <div className="game-screen" style={{ height: "100dvh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at center, #0f0822 0%, #030206 100%)", overflow: "hidden" }}>
       
       {/* HEADER NAVBAR */}
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid rgba(138, 43, 226, 0.15)", background: "rgba(3, 2, 6, 0.8)", backdropFilter: "blur(8px)", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }} onClick={onBackToMenu}>
-          <Image
-            src="/cards-night-icon.png"
-            alt="Cards Night"
-            width={36}
-            height={36}
-            style={{ filter: "drop-shadow(0 0 5px rgba(255, 0, 127, 0.6))", cursor: "pointer" }}
-          />
-          <span style={{ fontFamily: "var(--font-title)", fontWeight: 800, fontSize: "18px", letterSpacing: "1px", cursor: "pointer" }}>
-            Cards Night
-          </span>
-        </div>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", padding: "14px clamp(12px, 4vw, 24px)", borderBottom: "1px solid rgba(138, 43, 226, 0.15)", background: "rgba(3, 2, 6, 0.8)", backdropFilter: "blur(8px)", position: "sticky", top: 0, zIndex: 100 }}>
+        <button
+          type="button"
+          aria-label="Voltar ao menu"
+          onClick={onBackToMenu}
+          style={{ display: "flex", alignItems: "center", flexShrink: 0, padding: 0, border: 0, background: "transparent", color: "#fff", cursor: "pointer", fontFamily: "var(--font-home-jakarta), sans-serif", fontWeight: 800, fontSize: "clamp(14px, 4vw, 18px)", letterSpacing: "1px", lineHeight: 1, whiteSpace: "nowrap" }}
+        >
+          CARDS NIGHT
+        </button>
         
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <div style={{ fontSize: "14px", background: "rgba(255, 0, 127, 0.1)", border: "1px solid rgba(255, 0, 127, 0.3)", padding: "4px 12px", borderRadius: "20px", fontWeight: 700, color: "#ff007f" }}>
@@ -317,7 +312,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
           <p style={{ textTransform: "uppercase", fontSize: "12px", letterSpacing: "2px", color: "rgba(255,255,255,0.5)", marginBottom: "4px" }}>
             Desafio para:
           </p>
-          <h2 style={{ fontFamily: "var(--font-title)", fontSize: "28px", fontWeight: 800, color: "#fff", textShadow: "0 0 10px rgba(255,0,127,0.5)" }}>
+          <h2 style={{ fontFamily: "var(--font-home-jakarta), sans-serif", fontSize: "28px", fontWeight: 800, color: "#fff", textShadow: "0 0 10px rgba(255,0,127,0.5)" }}>
             {currentPlayer}
           </h2>
         </div>
@@ -375,7 +370,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
               <div style={{ width: "100%", height: "8px", background: "rgba(255,255,255,0.05)", borderRadius: "4px", overflow: "hidden", border: "1px solid rgba(138,43,226,0.2)" }}>
                 <div style={{ height: "100%", background: "linear-gradient(to right, #8a2be2, #ff007f)", width: `${(countdown / 7) * 100}%`, transition: "width 1s linear" }} />
               </div>
-              <div style={{ fontFamily: "var(--font-title)", fontSize: "36px", fontWeight: 800, color: "#fff", textShadow: "0 0 10px var(--color-pink)" }}>
+              <div style={{ fontFamily: "var(--font-home-jakarta), sans-serif", fontSize: "36px", fontWeight: 800, color: "#fff", textShadow: "0 0 10px var(--color-pink)" }}>
                 {countdown}s
               </div>
             </div>

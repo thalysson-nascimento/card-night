@@ -1,11 +1,12 @@
 "use client";
 
-import { Plus, ShieldAlert, Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 import GameEngine from "../src/components/GameEngine";
 import { getRandomCards } from "./actions";
+import styles from "./page.module.css";
 
 export default function Home() {
   const [gameState, setGameState] = useState<"menu" | "playing">("menu");
@@ -14,8 +15,11 @@ export default function Home() {
   const [cards, setCards] = useState<Array<{ id: string; content: string }>>([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isInputShaking, setIsInputShaking] = useState(false);
 
   const [isPromoAdModalOpen, setIsPromoAdModalOpen] = useState(false);
+  const playerInputRef = useRef<HTMLInputElement>(null);
+  const shakeTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -23,20 +27,33 @@ export default function Home() {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length >= 2) {
+          if (Array.isArray(parsed)) {
             setPlayers(parsed);
           } else {
-            setPlayers(["Jogador 1", "Jogador 2"]);
+            setPlayers([]);
           }
         } catch (e) {
           console.error("Failed to parse players from localStorage", e);
-          setPlayers(["Jogador 1", "Jogador 2"]);
+          setPlayers([]);
         }
-      } else {
-        setPlayers(["Jogador 1", "Jogador 2"]);
       }
     }
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (shakeTimeoutRef.current !== null) {
+        window.clearTimeout(shakeTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!errorMsg) return;
+
+    const timeout = window.setTimeout(() => setErrorMsg(""), 2800);
+    return () => window.clearTimeout(timeout);
+  }, [errorMsg]);
 
   // Initialize AdMob, show Interstitial Ad on App Open, and prepare Rewarded Video
   useEffect(() => {
@@ -106,9 +123,17 @@ export default function Home() {
   const handleAddPlayer = (e: React.FormEvent) => {
     e.preventDefault();
     const name = newPlayerName.trim();
-    if (!name) return;
-    if (players.includes(name)) {
+    if (!name) {
+      triggerInputShake();
+      playerInputRef.current?.focus();
+      return;
+    }
+    if (players.some((player) => player.toLowerCase() === name.toLowerCase())) {
       setErrorMsg("Esse nome de jogador já existe.");
+      return;
+    }
+    if (players.length >= 16) {
+      setErrorMsg("Limite máximo de 16 jogadores atingido.");
       return;
     }
     const updated = [...players, name];
@@ -119,14 +144,19 @@ export default function Home() {
   };
 
   const handleRemovePlayer = (name: string) => {
-    if (players.length <= 2) {
-      setErrorMsg("Você precisa de pelo menos 2 jogadores.");
-      return;
-    }
     const updated = players.filter((p) => p !== name);
     setPlayers(updated);
     localStorage.setItem("mqp_players", JSON.stringify(updated));
     setErrorMsg("");
+  };
+
+  const triggerInputShake = () => {
+    setIsInputShaking(false);
+    if (shakeTimeoutRef.current !== null) {
+      window.clearTimeout(shakeTimeoutRef.current);
+    }
+    requestAnimationFrame(() => setIsInputShaking(true));
+    shakeTimeoutRef.current = window.setTimeout(() => setIsInputShaking(false), 400);
   };
 
   const proceedToGame = async () => {
@@ -151,6 +181,8 @@ export default function Home() {
   const handleStartGame = async () => {
     if (players.length < 2) {
       setErrorMsg("Insira pelo menos 2 jogadores para iniciar.");
+      triggerInputShake();
+      playerInputRef.current?.focus();
       return;
     }
     
@@ -209,113 +241,106 @@ export default function Home() {
   }
 
   return (
-    <div style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "radial-gradient(circle at center, #110729 0%, #030206 100%)", overflow: "hidden" }}>
-      
-      <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "95vh", overflowY: "auto" }}>
-        
-        {/* GAME TITLE / LOGO */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-          <div style={{ animation: "float 4s ease-in-out infinite", position: "relative" }}>
+    <div className={styles.homeStage}>
+      <main className={styles.homeMain}>
+        <div className={styles.homeContent}>
+          <header className={styles.homeHeader}>
             <Image
-              src="/cards-night-icon.png"
+              src="/logo-cards-nigth-transparent.png"
               alt="Cards Night"
-              width={112}
-              height={112}
+              width={340}
+              height={340}
               priority
-              style={{ filter: "drop-shadow(0 0 15px rgba(255, 0, 127, 0.6))" }}
+              className={styles.homeLogo}
             />
-          </div>
-          <h1 style={{ fontFamily: "var(--font-title)", fontSize: "40px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", color: "#fff", textShadow: "0 0 15px rgba(255,0,127,0.7)" }}>
-            Cards Night
-          </h1>
-          <p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "14px", lineHeight: "1.5" }}>
-            O jogo de cartas mais picante e divertido para animar sua noite. Contagens rápidas de 7 segundos e desafios intensos.
-          </p>
-        </div>
+            <h1 className={styles.homeTitle}>
+              <span className={styles.homeTitleCards}>CARDS</span>
+              <span className={styles.homeTitleNight}>NIGHT</span>
+            </h1>
+            <p className={styles.homeSubtitle}>
+              O jogo de cartas mais picante e divertido para animar sua noite. Contagens rápidas de 7 segundos e desafios intensos.
+            </p>
+          </header>
 
-        {/* PLAYER REGISTRATION FORM */}
-        <div style={{ textAlign: "left", display: "flex", flexDirection: "column", gap: "12px" }}>
-          <h3 style={{ textTransform: "uppercase", fontSize: "12px", letterSpacing: "1px", color: "rgba(255, 255, 255, 0.4)", marginBottom: "4px" }}>
-            Jogadores ({players.length})
-          </h3>
-          
-          {/* Add Player Input */}
-          <form onSubmit={handleAddPlayer} style={{ display: "flex", gap: "8px" }}>
-            <input
-              type="text"
-              placeholder="Nome do jogador..."
-              className="input-neon"
-              value={newPlayerName}
-              onChange={(e) => setNewPlayerName(e.target.value)}
-              maxLength={20}
-            />
-            <button type="submit" className="btn-neon" style={{ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Plus size={20} />
-            </button>
-          </form>
+          <section className={styles.playerSection} aria-label="Jogadores">
+            <form
+              onSubmit={handleAddPlayer}
+              className={`${styles.playerInputWrapper} ${isInputShaking ? styles.shakeFeedback : ""}`}
+            >
+              <input
+                ref={playerInputRef}
+                type="text"
+                placeholder="Nome do jogador..."
+                className={styles.playerInput}
+                value={newPlayerName}
+                onChange={(e) => setNewPlayerName(e.target.value)}
+                maxLength={22}
+                autoComplete="off"
+                aria-label="Nome do jogador"
+              />
+              <button
+                type="submit"
+                className={styles.addPlayerButton}
+                aria-label="Adicionar jogador"
+                title="Adicionar jogador"
+              >
+                <Plus size={20} />
+              </button>
+            </form>
 
-          {/* Error Message */}
-          {errorMsg && (
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#ff3333", fontSize: "13px", fontWeight: 500 }}>
-              <ShieldAlert size={16} />
-              <span>{errorMsg}</span>
+            <div className={styles.playersList}>
+              {players.map((player) => (
+                <div key={player} className={styles.playerChip}>
+                  <span>{player}</span>
+                  <button
+                    type="button"
+                    className={styles.removePlayerButton}
+                    onClick={() => handleRemovePlayer(player)}
+                    aria-label={`Remover ${player}`}
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              ))}
             </div>
-          )}
 
-          {/* Players Chips List */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", maxHeight: "150px", overflowY: "auto", padding: "4px" }}>
-            {players.map((player) => (
-              <div key={player} style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(138, 43, 226, 0.12)", border: "1px solid rgba(138, 43, 226, 0.25)", padding: "6px 12px", borderRadius: "20px", fontSize: "14px", fontWeight: 600 }}>
-                <span>{player}</span>
-                <button
-                  type="button"
-                  style={{ background: "transparent", border: "none", color: "rgba(255, 255, 255, 0.4)", cursor: "pointer", display: "flex", alignItems: "center" }}
-                  onClick={() => handleRemovePlayer(player)}
-                  onMouseOver={(e) => (e.currentTarget.style.color = "#ff3333")}
-                  onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.4)")}
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+            <div className={styles.minPlayersNotice} aria-live="polite">
+              <span className={`${styles.statusDot} ${players.length >= 2 ? styles.statusReady : styles.statusWaiting}`} />
+              <p className={players.length >= 2 ? styles.statusTextReady : styles.statusTextWaiting}>
+                {players.length >= 2
+                  ? `${players.length} jogadores prontos • Mínimo de 2 jogadores atingido`
+                  : players.length === 0
+                    ? "Mínimo de 2 jogadores para iniciar a partida"
+                    : "Adicione mais 1 jogador para iniciar (mínimo 2)"}
+              </p>
+            </div>
+
+            <button
+              className={`${styles.startGameButton} ${players.length < 2 ? styles.startGameLocked : ""}`}
+              onClick={handleStartGame}
+              disabled={loading}
+            >
+              <span>{loading ? "Carregando..." : "Iniciar Jogo"}</span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5.14v14l11-7-11-7z" />
+              </svg>
+            </button>
+          </section>
         </div>
 
-        {/* INICIAR BUTTON */}
-        <button
-          className="btn-neon btn-neon-pink"
-          style={{ width: "100%", padding: "16px", fontSize: "18px", letterSpacing: "1.5px", animation: "pulse-pink 2s infinite" }}
-          onClick={handleStartGame}
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Iniciar Jogo"}
-        </button>
+        <footer className={styles.homeFooter}>
+          <Link href="/termos">Termos de Uso</Link>
+          <span aria-hidden="true">•</span>
+          <Link href="/politica">Política de Privacidade</Link>
+        </footer>
+      </main>
 
-      </div>
-
-      {/* Footer Links */}
-      <div style={{
-        marginTop: "16px",
-        display: "flex",
-        gap: "16px",
-        justifyContent: "center",
-        fontSize: "12px",
-        zIndex: 10
-      }}>
-        <Link href="/termos" style={{ color: "rgba(255, 255, 255, 0.4)", textDecoration: "none", transition: "color 0.2s" }}
-          onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)")}
-          onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.4)")}
-        >
-          Termos de Uso
-        </Link>
-        <span style={{ color: "rgba(255, 255, 255, 0.2)" }}>|</span>
-        <Link href="/politica" style={{ color: "rgba(255, 255, 255, 0.4)", textDecoration: "none", transition: "color 0.2s" }}
-          onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)")}
-          onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.4)")}
-        >
-          Política de Privacidade
-        </Link>
-      </div>
+      {errorMsg && (
+        <div className={styles.toastBanner} role="alert">
+          <span />
+          <p>{errorMsg}</p>
+        </div>
+      )}
 
       {/* PROMO AD MODAL */}
       {isPromoAdModalOpen && (
