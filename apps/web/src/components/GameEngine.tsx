@@ -20,7 +20,6 @@ interface GameEngineProps {
 
 export default function GameEngine({ initialCards, players, onBackToMenu }: GameEngineProps) {
   const [mounted, setMounted] = useState(false);
-  const [showLegalConsent, setShowLegalConsent] = useState(true);
   const [cards, setCards] = useState(initialCards);
   const [activeIdx, setActiveIdx] = useState(0);
   const [flippedCards, setFlippedCards] = useState<Record<number, boolean>>({});
@@ -90,24 +89,10 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
 
   useEffect(() => {
     setMounted(true);
-    try {
-      setShowLegalConsent(localStorage.getItem("cards_night_legal_consent_v1") !== "true");
-    } catch {
-      setShowLegalConsent(true);
-    }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
-
-  const acceptLegalTerms = () => {
-    try {
-      localStorage.setItem("cards_night_legal_consent_v1", "true");
-    } catch {
-      // The modal is closed for this session even if localStorage is unavailable.
-    }
-    setShowLegalConsent(false);
-  };
 
   // Imperatively control Swiper touch movement permission to avoid React 19 re-render loops
   useEffect(() => {
@@ -119,91 +104,6 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
   if (!mounted) return null;
 
   const currentPlayer = players[activeIdx % players.length] || "Jogador";
-
-  const legalConsentModal = showLegalConsent ? (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="legal-consent-title"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px",
-        background: "rgba(3, 5, 20, 0.82)",
-        backdropFilter: "blur(8px)",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-          padding: "24px",
-          borderRadius: "18px",
-          border: "1px solid rgba(255, 255, 255, 0.12)",
-          background: "#090E2B",
-          boxSizing: "border-box",
-          textAlign: "center",
-          boxShadow: "0 24px 80px rgba(0, 0, 0, 0.45)",
-        }}
-      >
-        <h2
-          id="legal-consent-title"
-          style={{
-            margin: "0 0 12px",
-            fontFamily: "var(--font-home-jakarta), sans-serif",
-            fontSize: "22px",
-            lineHeight: 1.25,
-          }}
-        >
-          Aceite os termos para continuar
-        </h2>
-        <p
-          style={{
-            margin: "0 0 20px",
-            color: "rgba(255, 255, 255, 0.72)",
-            fontFamily: "var(--font-home-jakarta), sans-serif",
-            lineHeight: 1.55,
-          }}
-        >
-          Para iniciar o jogo, leia e aceite a{" "}
-          <a
-            href="https://cardsnigth.blogspot.com/#privacidade"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#C9A6FF" }}
-          >
-            Política de Privacidade
-          </a>{" "}
-          e os{" "}
-          <a
-            href="https://cardsnigth.blogspot.com/#termos"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#C9A6FF" }}
-          >
-            Termos de Uso
-          </a>.
-        </p>
-        <button
-          type="button"
-          className="btn-neon"
-          onClick={acceptLegalTerms}
-          style={{
-            width: "100%",
-            minHeight: "52px",
-            justifyContent: "center",
-            fontFamily: "var(--font-home-jakarta), sans-serif",
-          }}
-        >
-          Aceitar termos
-        </button>
-      </div>
-    </div>
-  ) : null;
 
   const handleCardFlip = (index: number) => {
     // Only flip if it's the active card
@@ -304,9 +204,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
     const winners = sortedRanking.filter(p => p[1] === maxScore).map(p => p[0]);
 
     return (
-      <>
-        {legalConsentModal}
-        <div className="game-screen" style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "linear-gradient(to bottom, #070312, #020105)", overflow: "hidden" }}>
+      <div className="game-screen" style={{ height: "100dvh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "10px", background: "linear-gradient(to bottom, #070312, #020105)", overflow: "hidden" }}>
         <div className="glass-container" style={{ width: "100%", maxWidth: "480px", textAlign: "center", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "95vh", overflowY: "auto" }}>
           
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
@@ -364,17 +262,14 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
           </div>
 
         </div>
-        </div>
-      </>
+      </div>
     );
   }
 
   const isCurrentFlipped = !!flippedCards[activeIdx];
 
   return (
-    <>
-      {legalConsentModal}
-      <div className="game-screen" style={{ height: "100dvh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at center, #0f0822 0%, #030206 100%)", overflow: "hidden" }}>
+    <div className="game-screen" style={{ height: "100dvh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at center, #0f0822 0%, #030206 100%)", overflow: "hidden" }}>
       
       {/* HEADER NAVBAR */}
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", padding: "14px clamp(12px, 4vw, 24px)", borderBottom: "1px solid rgba(138, 43, 226, 0.15)", background: "rgba(3, 2, 6, 0.8)", backdropFilter: "blur(8px)", position: "sticky", top: 0, zIndex: 100 }}>
@@ -510,8 +405,7 @@ export default function GameEngine({ initialCards, players, onBackToMenu }: Game
         </div>
 
       </main>
-      </div>
-    </>
+    </div>
   );
 }
 

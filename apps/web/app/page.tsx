@@ -17,11 +17,18 @@ export default function Home() {
   const [isInputShaking, setIsInputShaking] = useState(false);
 
   const [isPromoAdModalOpen, setIsPromoAdModalOpen] = useState(false);
+  const [showLegalConsent, setShowLegalConsent] = useState(true);
   const playerInputRef = useRef<HTMLInputElement>(null);
   const shakeTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      try {
+        setShowLegalConsent(localStorage.getItem("cards_night_legal_consent_v1") !== "true");
+      } catch {
+        setShowLegalConsent(true);
+      }
+
       const saved = localStorage.getItem("mqp_players");
       if (saved) {
         try {
@@ -46,6 +53,15 @@ export default function Home() {
       }
     };
   }, []);
+
+  const acceptLegalTerms = () => {
+    try {
+      localStorage.setItem("cards_night_legal_consent_v1", "true");
+    } catch {
+      // The modal can still close for this session if storage is unavailable.
+    }
+    setShowLegalConsent(false);
+  };
 
   useEffect(() => {
     if (!errorMsg) return;
@@ -350,6 +366,91 @@ export default function Home() {
         <div className={styles.toastBanner} role="alert">
           <span />
           <p>{errorMsg}</p>
+        </div>
+      )}
+
+      {showLegalConsent && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="legal-consent-title"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 10000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+            background: "rgba(3, 5, 20, 0.82)",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "420px",
+              boxSizing: "border-box",
+              padding: "24px",
+              borderRadius: "18px",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              background: "#090E2B",
+              textAlign: "center",
+              boxShadow: "0 24px 80px rgba(0, 0, 0, 0.45)",
+            }}
+          >
+            <h2
+              id="legal-consent-title"
+              style={{
+                margin: "0 0 12px",
+                fontFamily: "var(--font-home-jakarta), sans-serif",
+                fontSize: "22px",
+                lineHeight: 1.25,
+              }}
+            >
+              Aceite os termos para continuar
+            </h2>
+            <p
+              style={{
+                margin: "0 0 20px",
+                color: "rgba(255, 255, 255, 0.72)",
+                fontFamily: "var(--font-home-jakarta), sans-serif",
+                lineHeight: 1.55,
+              }}
+            >
+              Para usar o aplicativo, leia e aceite a{" "}
+              <a
+                href="https://cardsnigth.blogspot.com/#privacidade"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#C9A6FF" }}
+              >
+                Política de Privacidade
+              </a>{" "}
+              e os{" "}
+              <a
+                href="https://cardsnigth.blogspot.com/#termos"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#C9A6FF" }}
+              >
+                Termos de Uso
+              </a>.
+            </p>
+            <button
+              type="button"
+              className="btn-neon"
+              onClick={acceptLegalTerms}
+              style={{
+                width: "100%",
+                minHeight: "52px",
+                justifyContent: "center",
+                fontFamily: "var(--font-home-jakarta), sans-serif",
+              }}
+            >
+              Aceitar termos
+            </button>
+          </div>
         </div>
       )}
 
