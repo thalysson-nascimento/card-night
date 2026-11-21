@@ -17,7 +17,15 @@ export default function Home() {
   const [isInputShaking, setIsInputShaking] = useState(false);
 
   const [isPromoAdModalOpen, setIsPromoAdModalOpen] = useState(false);
-  const [showLegalConsent, setShowLegalConsent] = useState(true);
+  const [showLegalConsent, setShowLegalConsent] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    try {
+      return localStorage.getItem("cards_night_legal_consent_v1") !== "true";
+    } catch {
+      return true;
+    }
+  });
   const playerInputRef = useRef<HTMLInputElement>(null);
   const shakeTimeoutRef = useRef<number | null>(null);
 
