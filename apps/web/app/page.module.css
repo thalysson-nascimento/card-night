@@ -622,3 +622,13 @@ button.secondary {
     height: 220px;
   }
 } */
+
+@media (max-height: 740px) {
+  .homeMain { padding: 16px 24px; }
+  .homeHeader { margin-bottom: 20px; }
+  .homeLogo { width: clamp(80px, 21dvh, 160px); height: clamp(80px, 21dvh, 160px); }
+  .homeSubtitle { margin-top: 12px; font-size: 13px; }
+  .homeFooter { padding: 4px 0; gap: 6px; font-size: 11px; }
+  .playersList { max-height: 64px; min-height: 0; }
+  .minPlayersNotice { margin: 10px 0; }
+}

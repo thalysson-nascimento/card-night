@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Cards After Dark — Menu Principal</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Geometric Modern Typography matching the Logo Identity -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep: #090B1E;
+      --bg-radial: #141842;
+      --neon-magenta: #FF2A85;
+      --neon-pink: #E6289E;
+      --neon-violet: #8B5CF6;
+      --neon-gold: #F6C36B;
+      --neon-cyan: #38BDF8;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background-color: var(--bg-deep);
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Radial Glow Background matching Logo Reference */
+    .bg-cardsnight-stage {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(55, 48, 163, 0.34) 0%, rgba(19, 23, 66, 0.22) 38%, rgba(9, 11, 30, 1) 75%),
+        linear-gradient(180deg, #0B0E28 0%, #090B1E 50%, #070817 100%);
+    }
+
+    /* Subtle Ambient Floating Particles */
+    .ambient-orb-magenta {
+      position: fixed;
+      top: -80px;
+      left: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(255, 42, 133, 0.14) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-orb-cyan {
+      position: fixed;
+      bottom: -90px;
+      right: -70px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Wordmark Typography Matching Reference */
+    .wordmark-cards {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      color: #FFFFFF;
+      text-shadow: 0 2px 18px rgba(255, 255, 255, 0.15);
+    }
+
+    .wordmark-night {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      color: #E6289E;
+      text-shadow: 0 0 18px rgba(230, 40, 158, 0.45);
+    }
+
+    /* Exact Spec Player Input */
+    .player-input-field {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px;
+      padding-right: 54px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.04);
+      color: #FFFFFF;
+      font-size: 15px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      outline: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(8px);
+    }
+
+    .player-input-field::placeholder {
+      color: rgba(203, 213, 225, 0.52);
+    }
+
+    .player-input-field:focus {
+      border-color: #FF2A85;
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 0 3px rgba(255, 42, 133, 0.18), 0 0 22px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Player Chips */
+    .player-chip {
+      background: linear-gradient(135deg, rgba(255, 42, 133, 0.14) 0%, rgba(139, 92, 246, 0.14) 55%, rgba(56, 189, 248, 0.14) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(6px);
+      animation: chipPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes chipPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Primary Start CTA Button */
+    .btn-start-game {
+      width: 100%;
+      padding: 16px;
+      border-radius: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      background: linear-gradient(95deg, #FF2A85 0%, #9333EA 52%, #2563EB 82%, #38BDF8 100%);
+      background-size: 160% 100%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 8px 28px -4px rgba(255, 42, 133, 0.45), 0 4px 16px -2px rgba(56, 189, 248, 0.28);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-start-game:hover:not(:disabled) {
+      background-position: 100% 0;
+      transform: translateY(-1.5px);
+      box-shadow: 0 12px 34px -4px rgba(255, 42, 133, 0.6), 0 6px 22px -2px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-start-game:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .btn-start-game.is-locked {
+      opacity: 0.55;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      filter: saturate(0.75);
+    }
+
+    /* Subtle Emblem Pulse */
+    .logo-glow {
+      filter: drop-shadow(0 0 24px rgba(255, 42, 133, 0.24)) drop-shadow(0 0 36px rgba(56, 189, 248, 0.16));
+    }
+
+    /* Shake animation for validation */
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    .shake-feedback {
+      animation: gentleShake 0.38s ease-in-out;
+    }
+
+    /* Custom Scrollbar for chip container & modals */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-cardsnight-stage flex justify-center items-stretch min-h-[100dvh] selection:bg-pink-500 selection:text-white">
+
+  <!-- Ambient Neon Orbs -->
+  <div class="ambient-orb-magenta"></div>
+  <div class="ambient-orb-cyan"></div>
+
+  <!-- Mobile-First Main Container (Max-width 420px centered on desktop) -->
+  <main class="relative z-10 w-full max-w-[420px] min-h-[100dvh] px-6 py-8 sm:py-10 flex flex-col justify-between">
+
+    <!-- TOP SECTION: Emblem Logo & Subtitle -->
+    <header class="flex flex-col items-center text-center pt-1">
+
+      <!-- Custom High-Precision Vector Emblem Matching Provided Cards After Dark Reference -->
+      <div class="logo-glow mb-3 select-none" aria-label="Cards After Dark Logo">
+        <svg width="168" height="162" viewBox="0 0 240 232" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Left Card Gradient: Hot Magenta -> Violet -> Blue -->
+            <linearGradient id="leftCardStroke" x1="25" y1="30" x2="115" y2="210" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF2A85"/>
+              <stop offset="55%" stop-color="#C026D3"/>
+              <stop offset="100%" stop-color="#6366F1"/>
+            </linearGradient>
+
+            <!-- Left Card Subtle Inner Fill -->
+            <linearGradient id="leftCardFill" x1="35" y1="35" x2="115" y2="180" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF2A85" stop-opacity="0.22"/>
+              <stop offset="65%" stop-color="#4F46E5" stop-opacity="0.06"/>
+              <stop offset="100%" stop-color="#090B1E" stop-opacity="0"/>
+            </linearGradient>
+
+            <!-- Right Card Gradient: Violet -> Warm Gold -> Electric Cyan -->
+            <linearGradient id="rightCardStroke" x1="125" y1="30" x2="205" y2="210" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#8B5CF6"/>
+              <stop offset="32%" stop-color="#F6C36B"/>
+              <stop offset="68%" stop-color="#38BDF8"/>
+              <stop offset="100%" stop-color="#6366F1"/>
+            </linearGradient>
+
+            <!-- Right Card Subtle Inner Fill -->
+            <linearGradient id="rightCardFill" x1="195" y1="45" x2="125" y2="185" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.20"/>
+              <stop offset="65%" stop-color="#1E1B4B" stop-opacity="0.06"/>
+              <stop offset="100%" stop-color="#090B1E" stop-opacity="0"/>
+            </linearGradient>
+
+            <!-- Feminine Silhouette Contour Gradient -->
+            <linearGradient id="silhouetteGrad" x1="72" y1="30" x2="175" y2="195" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF2A85"/>
+              <stop offset="38%" stop-color="#E879F9"/>
+              <stop offset="62%" stop-color="#F6C36B"/>
+              <stop offset="100%" stop-color="#38BDF8"/>
+            </linearGradient>
+
+            <!-- Spade Symbol Gradient -->
+            <linearGradient id="spadeGrad" x1="102" y1="124" x2="132" y2="156" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF2A85"/>
+              <stop offset="50%" stop-color="#A855F7"/>
+              <stop offset="100%" stop-color="#38BDF8"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Left Tilted Playing Card -->
+          <path d="M98 34 L43 46 C35.5 47.6 30.8 55.1 32.5 62.6 L62.5 196.5 C64.2 204 71.7 208.7 79.2 207 L102 201.8"
+                fill="url(#leftCardFill)"
+                stroke="url(#leftCardStroke)"
+                stroke-width="4.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <!-- Right Tilted Playing Card -->
+          <path d="M139 30 L143 44 L196 55.5 C203.5 57.1 208.2 64.6 206.5 72.1 L176.5 206 C174.8 213.5 167.3 218.2 159.8 216.5 L140 212"
+                fill="url(#rightCardFill)"
+                stroke="url(#rightCardStroke)"
+                stroke-width="4.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <!-- Hair Bun & Head Profile -->
+          <path d="M106 42 C96 42 90 50 91 59 C92 66 97 71 103 72"
+                stroke="#FF2A85"
+                stroke-width="3.4"
+                stroke-linecap="round"/>
+
+          <!-- Crown of Head, Face Profile, Neck & Right Shoulder/Arm -->
+          <path d="M135 28 C136 37 129 44 118 46 C111 47 107 52 107 59 C107 67 104 74 96 79 C84 86 78 96 79 112 C80 124 84 134 91 138"
+                stroke="url(#silhouetteGrad)"
+                stroke-width="3.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <!-- Facial Profile & Right Side Contour -->
+          <path d="M136 33 C139 37 140 42 139 46 L143 52 C144 53.5 143 55 141 55.5 L140 58 L141 60.5 L139 63 C139 67 136 70 131 70 L125 69.5 C124 75 127 80 134 83 C144 87 149 97 151 112 C153 128 159 144 166 158 C170 166 170 175 166 181"
+                stroke="url(#silhouetteGrad)"
+                stroke-width="3.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <!-- Elegant Spine / Back Contour Line -->
+          <path d="M111 85 C109 98 111 110 115 119"
+                stroke="url(#silhouetteGrad)"
+                stroke-width="3"
+                stroke-linecap="round"
+                opacity="0.85"/>
+
+          <!-- Left Hip & Lower Silhouette Curve -->
+          <path d="M98 134 C91 146 90 161 95 176 C99 187 101 196 101 203"
+                stroke="url(#leftCardStroke)"
+                stroke-width="3.8"
+                stroke-linecap="round"/>
+
+          <!-- Right Hip & Lower Silhouette Curve -->
+          <path d="M142 130 C149 144 152 161 148 179 C145 191 142 202 140 212"
+                stroke="url(#rightCardStroke)"
+                stroke-width="3.8"
+                stroke-linecap="round"/>
+
+          <!-- Central Neon Spade Emblem -->
+          <path d="M117 124 C117 124 103 137 103 145 C103 150.5 107.5 154 112 154 C114.5 154 116 152.5 116.5 151.5 L113.5 158.5 L120.5 158.5 L117.5 151.5 C118 152.5 119.5 154 122 154 C126.5 154 131 150.5 131 145 C131 137 117 124 117 124 Z"
+                fill="url(#spadeGrad)"/>
+        </svg>
+      </div>
+
+      <!-- Brand Wordmark -->
+      <h1 class="flex flex-col items-center leading-none select-none">
+        <span class="wordmark-cards text-[34px] sm:text-[38px] pl-[0.16em]">CARDS</span>
+        <span class="wordmark-night text-[20px] sm:text-[22px] mt-1.5 pl-[0.28em]">AFTER DARK</span>
+      </h1>
+
+      <!-- Properly Spaced Subtitle -->
+      <p class="mt-6 text-[#CBD5E1] text-[14.5px] leading-[1.55] font-normal max-w-[345px]">
+        O jogo de cartas mais picante e divertido para animar sua noite. Contagens rápidas de 7 segundos e desafios intensos.
+      </p>
+    </header>
+
+    <!-- MIDDLE SECTION: Player Input, Active Roster, Minimum Notice & Start CTA -->
+    <section class="my-8 flex flex-col w-full">
+
+      <!-- Input Container (100% width, 16px padding, 8px radius, 1px 50% opacity border) -->
+      <div class="relative w-full" id="inputWrapper">
+        <input
+          type="text"
+          id="playerInput"
+          class="player-input-field"
+          placeholder="Nome do jogador..."
+          maxlength="22"
+          autocomplete="off"
+          aria-label="Nome do jogador"
+        />
+        <button
+          type="button"
+          id="addPlayerBtn"
+          aria-label="Adicionar jogador"
+          title="Adicionar jogador"
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-lg flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Dynamic Player Tags / Chips List -->
+      <div id="playersListContainer" class="mt-3.5 flex flex-wrap gap-2 min-h-[34px] max-h-[118px] overflow-y-auto pr-0.5">
+        <!-- Chips are rendered dynamically via JS -->
+      </div>
+
+      <!-- Minimum Players Notice -->
+      <div class="mt-4 mb-4 flex items-center justify-center gap-2 text-center" id="minPlayersNotice">
+        <span id="statusDot" class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+        <p id="minPlayersText" class="text-[13px] font-medium text-slate-300/90 transition-colors duration-300">
+          Mínimo de 2 jogadores para iniciar a partida
+        </p>
+      </div>
+
+      <!-- Primary Start Game CTA Button -->
+      <button
+        type="button"
+        id="startGameBtn"
+        class="btn-start-game is-locked flex items-center justify-center gap-2.5"
+      >
+        <span>Iniciar Jogo</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5.14v14l11-7-11-7z"/>
+        </svg>
+      </button>
+
+    </section>
+
+    <!-- FOOTER SECTION: Legal Links -->
+    <footer class="pt-2 pb-1 flex items-center justify-center gap-3 text-[12.5px] text-slate-400">
+      <button
+        type="button"
+        onclick="openLegalModal('terms')"
+        class="hover:text-pink-400 transition-colors py-1.5 px-1 cursor-pointer"
+      >
+        Termos de Uso
+      </button>
+      <span class="text-slate-600 select-none">•</span>
+      <button
+        type="button"
+        onclick="openLegalModal('privacy')"
+        class="hover:text-cyan-400 transition-colors py-1.5 px-1 cursor-pointer"
+      >
+        Política de Privacidade
+      </button>
+    </footer>
+
+  </main>
+
+  <!-- Toast / Validation Feedback Banner -->
+  <div
+    id="toastBanner"
+    class="fixed top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 -translate-y-3 transition-all duration-300 w-[90%] max-w-[380px]"
+  >
+    <div class="px-4 py-3 rounded-xl bg-[#13173A]/95 border border-pink-500/40 shadow-2xl backdrop-blur-md flex items-center gap-3">
+      <div class="w-2.5 h-2.5 rounded-full bg-pink-500 shrink-0"></div>
+      <p id="toastMessage" class="text-[13px] text-slate-100 font-medium leading-snug"></p>
+    </div>
+  </div>
+
+  <!-- Game Launch Preview Overlay (Triggers when clicking Iniciar Jogo with >= 2 players) -->
+  <div
+    id="gameStartOverlay"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-[#060816]/85 backdrop-blur-md transition-opacity"
+  >
+    <div class="w-full max-w-[370px] rounded-2xl bg-[#0F1333] border border-white/15 p-6 text-center shadow-[0_0_50px_rgba(255,42,133,0.28)] relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF2A85] via-[#8B5CF6] to-[#38BDF8]"></div>
+
+      <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-tr from-pink-500/20 to-cyan-400/20 border border-pink-500/40 flex items-center justify-center text-pink-400 font-bold text-xl">
+        7s
+      </div>
+
+      <h2 class="font-['Montserrat'] text-lg font-semibold tracking-wider text-white uppercase">
+        Baralho Embaralhado!
+      </h2>
+      <p class="mt-2 text-sm text-slate-300 leading-relaxed">
+        Preparando partida para <span id="overlayPlayerCount" class="text-pink-400 font-semibold"></span> jogadores. Preparem-se para responder em 7 segundos!
+      </p>
+
+      <div id="overlayRoster" class="mt-4 flex flex-wrap justify-center gap-1.5"></div>
+
+      <button
+        type="button"
+        onclick="closeGameOverlay()"
+        class="mt-6 w-full py-3.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-white text-sm font-medium tracking-wide transition-all cursor-pointer"
+      >
+        Voltar ao Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- Glassmorphic Legal Modal (Termos de Uso & Política de Privacidade) -->
+  <div
+    id="legalModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-[#050714]/80 backdrop-blur-md"
+    onclick="if(event.target === this) closeLegalModal()"
+  >
+    <div class="w-full max-w-[385px] max-h-[82dvh] flex flex-col rounded-2xl bg-[#0E1230]/95 border border-white/15 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
+        <h3 id="legalModalTitle" class="font-['Montserrat'] text-[15px] font-semibold tracking-wide text-white">
+          Termos de Uso
+        </h3>
+        <button
+          type="button"
+          onclick="closeLegalModal()"
+          class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+          aria-label="Fechar modal"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div id="legalModalBody" class="p-5 overflow-y-auto text-[13.5px] text-slate-300 leading-relaxed space-y-3">
+        <!-- Content injected via JS -->
+      </div>
+
+      <div class="p-4 border-t border-white/10 bg-black/20">
+        <button
+          type="button"
+          onclick="closeLegalModal()"
+          class="w-full py-3 rounded-lg bg-gradient-to-r from-[#FF2A85] to-[#8B5CF6] text-white text-xs font-semibold uppercase tracking-widest hover:opacity-95 transition-opacity cursor-pointer"
+        >
+          Entendi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management for players
+    let players = [];
+    let toastTimeout = null;
+
+    const playerInput = document.getElementById('playerInput');
+    const addPlayerBtn = document.getElementById('addPlayerBtn');
+    const playersListContainer = document.getElementById('playersListContainer');
+    const minPlayersText = document.getElementById('minPlayersText');
+    const statusDot = document.getElementById('statusDot');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const inputWrapper = document.getElementById('inputWrapper');
+
+    // Show non-intrusive custom toast message
+    function showToast(message) {
+      const toast = document.getElementById('toastBanner');
+      const toastMsg = document.getElementById('toastMessage');
+      toastMsg.textContent = message;
+
+      toast.classList.remove('opacity-0', '-translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-3');
+      }, 2800);
+    }
+
+    // Add player handler
+    function addPlayer() {
+      const rawName = playerInput.value.trim();
+
+      if (!rawName) {
+        inputWrapper.classList.remove('shake-feedback');
+        void inputWrapper.offsetWidth;
+        inputWrapper.classList.add('shake-feedback');
+        playerInput.focus();
+        return;
+      }
+
+      // Prevent duplicate names (case-insensitive)
+      const exists = players.some(p => p.toLowerCase() === rawName.toLowerCase());
+      if (exists) {
+        showToast(`"${rawName}" já está na lista de jogadores!`);
+        playerInput.select();
+        return;
+      }
+
+      if (players.length >= 16) {
+        showToast('Limite máximo de 16 jogadores atingido.');
+        return;
+      }
+
+      players.push(rawName);
+      playerInput.value = '';
+      playerInput.focus();
+      renderPlayers();
+    }
+
+    // Remove player handler
+    function removePlayer(index) {
+      players.splice(index, 1);
+      renderPlayers();
+    }
+
+    // Render chips and update minimum player status
+    function renderPlayers() {
+      playersListContainer.innerHTML = '';
+
+      players.forEach((name, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'player-chip inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[13px] font-medium text-white shadow-sm';
+
+        const label = document.createElement('span');
+        label.textContent = name;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'w-4 h-4 rounded-full bg-white/10 hover:bg-pink-500/80 text-white/80 hover:text-white flex items-center justify-center text-[10px] leading-none transition-colors cursor-pointer';
+        removeBtn.innerHTML = '✕';
+        removeBtn.setAttribute('aria-label', `Remover ${name}`);
+        removeBtn.onclick = () => removePlayer(index);
+
+        chip.appendChild(label);
+        chip.appendChild(removeBtn);
+        playersListContainer.appendChild(chip);
+      });
+
+      // Update minimum 2 players notice and CTA button state
+      if (players.length >= 2) {
+        minPlayersText.textContent = `${players.length} jogadores prontos • Mínimo de 2 jogadores atingido`;
+        minPlayersText.classList.remove('text-slate-300/90');
+        minPlayersText.classList.add('text-cyan-300');
+        statusDot.classList.remove('bg-pink-500', 'animate-pulse');
+        statusDot.classList.add('bg-cyan-400');
+        startGameBtn.classList.remove('is-locked');
+      } else {
+        const remaining = 2 - players.length;
+        minPlayersText.textContent = players.length === 0
+          ? 'Mínimo de 2 jogadores para iniciar a partida'
+          : `Adicione mais ${remaining} jogador para iniciar (mínimo 2)`;
+        minPlayersText.classList.remove('text-cyan-300');
+        minPlayersText.classList.add('text-slate-300/90');
+        statusDot.classList.remove('bg-cyan-400');
+        statusDot.classList.add('bg-pink-500', 'animate-pulse');
+        startGameBtn.classList.add('is-locked');
+      }
+    }
+
+    // Event Listeners
+    addPlayerBtn.addEventListener('click', addPlayer);
+
+    playerInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addPlayer();
+      }
+    });
+
+    startGameBtn.addEventListener('click', () => {
+      // Allow typing a name directly and pressing Iniciar Jogo if helpful, or validate minimum
+      if (playerInput.value.trim().length > 0 && players.length < 2) {
+        addPlayer();
+        if (players.length < 2) {
+          showToast('Adicione pelo menos 2 jogadores para iniciar!');
+          return;
+        }
+      }
+
+      if (players.length < 2) {
+        inputWrapper.classList.remove('shake-feedback');
+        void inputWrapper.offsetWidth;
+        inputWrapper.classList.add('shake-feedback');
+        showToast('É necessário cadastrar no mínimo 2 jogadores!');
+        playerInput.focus();
+        return;
+      }
+
+      // Open Game Start Preview
+      const overlay = document.getElementById('gameStartOverlay');
+      document.getElementById('overlayPlayerCount').textContent = players.length;
+      const roster = document.getElementById('overlayRoster');
+      roster.innerHTML = players
+        .map(p => `<span class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-slate-200">${p}</span>`)
+        .join('');
+
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+    });
+
+    function closeGameOverlay() {
+      const overlay = document.getElementById('gameStartOverlay');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }
+
+    // Legal Modal Content
+    const legalContent = {
+      terms: {
+        title: 'Termos de Uso — Cards After Dark',
+        html: `
+          <p><strong>1. Finalidade Recreativa:</strong> O <em>Cards After Dark</em> é um jogo social desenvolvido exclusivamente para entretenimento entre amigos maiores de 18 anos.</p>
+          <p><strong>2. Participação Voluntária:</strong> Todos os desafios, perguntas e dinâmicas de 7 segundos são opcionais. Nenhum participante deve ser pressionado a realizar algo desconfortável ou inseguro.</p>
+          <p><strong>3. Consumo Responsável:</strong> Caso o grupo utilize bebidas durante a partida, recomendamos moderação e responsabilidade.</p>
+        `
+      },
+      privacy: {
+        title: 'Política de Privacidade',
+        html: `
+          <p><strong>1. Funcionamento 100% Offline:</strong> O <em>Cards After Dark</em> funciona localmente no seu dispositivo sem necessidade de cadastro em servidores externos.</p>
+          <p><strong>2. Dados dos Jogadores:</strong> Os nomes inseridos no menu principal são armazenados apenas temporariamente na memória da sessão para organizar os turnos da partida.</p>
+          <p><strong>3. Segurança:</strong> Não coletamos, vendemos ou compartilhamos informações pessoais dos usuários com terceiros.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      const modal = document.getElementById('legalModal');
+      document.getElementById('legalModalTitle').textContent = legalContent[type].title;
+      document.getElementById('legalModalBody').innerHTML = legalContent[type].html;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeLegalModal() {
+      const modal = document.getElementById('legalModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Initialize initial UI state
+    renderPlayers();
+  </script>
+</body>
+</html>

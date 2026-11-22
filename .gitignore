@@ -34,5 +34,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Misc
+*.before-i18n.bak
 .DS_Store
 *.pem

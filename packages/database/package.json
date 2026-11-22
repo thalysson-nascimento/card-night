@@ -8,10 +8,12 @@
     ".": "./src/client.ts"
   },
   "scripts": {
-    "build": "prisma generate && node copy-db.js",
-    "db:generate": "prisma generate && node copy-db.js",
+    "build": "prisma generate && tsx prisma/migrate-i18n.ts && node copy-db.js",
+    "db:generate": "prisma generate && tsx prisma/migrate-i18n.ts && node copy-db.js",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts && node copy-db.js",
+    "db:migrate:i18n": "tsx prisma/migrate-i18n.ts && node copy-db.js",
+    "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.0.0"

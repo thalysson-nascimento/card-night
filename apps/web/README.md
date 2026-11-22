@@ -34,3 +34,18 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Internationalization
+
+The app selects Portuguese for browser languages `pt`, `pt-BR`, `pt-PT`, etc.
+All other browser languages select English, including German and Japanese.
+The server uses the primary `Accept-Language` value and the browser confirms it
+with `navigator.language` after hydration. There is no persisted language override.
+HTML language, title, description, accessibility labels and legal pages are localized
+from the first response. When no language is available, the default is English.
+
+UI messages live in `src/i18n/en.json`: Portuguese keys are the original messages;
+English values are their translations. Use `useI18n().t(message, parameters)` in
+components. Card requests send the detected locale to the server, which selects
+Portuguese or English from SQLite. See `packages/database/README.md` for migration
+and catalog maintenance.

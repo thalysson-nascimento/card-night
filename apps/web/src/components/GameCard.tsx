@@ -1,6 +1,9 @@
 "use client";
 
+import { useI18n } from "../i18n/provider";
+
 import React from "react";
+import Image from "next/image";
 import { Sparkles } from "lucide-react";
 
 interface GameCardProps {
@@ -11,54 +14,159 @@ interface GameCardProps {
   index: number;
 }
 
-export default function GameCard({ content, player, isFlipped, onFlip, index }: GameCardProps) {
+export default function GameCard({
+  content,
+  player,
+  isFlipped,
+  onFlip,
+  index,
+}: GameCardProps) {
+  const { t } = useI18n();
   return (
     <div className="card-perspective" onClick={onFlip}>
       <div className={`card-inner ${isFlipped ? "flipped" : ""}`}>
         {/* BACK SIDE (Facedown - Purple Theme) */}
         <div className="card-back">
-          <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-            <span style={{ fontSize: "14px", fontWeight: 600, color: "rgba(255, 255, 255, 0.4)", textTransform: "uppercase", letterSpacing: "1.5px" }}>
-              Carta {index + 1}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "rgba(255, 255, 255, 0.4)",
+                textTransform: "uppercase",
+                letterSpacing: "1.5px",
+              }}
+            >
+              {t("Carta")} {index + 1}
             </span>
           </div>
-          
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "20px" }}>
-            <h2 style={{ fontFamily: "var(--font-home-jakarta), sans-serif", fontSize: "28px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "2px", color: "#fff", textShadow: "0 0 10px rgba(138,43,226,0.6)" }}>
-              Cards Night
-            </h2>
-            <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.6)", letterSpacing: "1px", textTransform: "uppercase" }}>
-              Vez de <strong style={{ color: "#ff007f" }}>{player}</strong>
+
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "20px",
+            }}
+          >
+            <Image
+              src="/logo-cards-nigth-transparent.png"
+              alt="Cards After Dark"
+              width={120}
+              height={120}
+              sizes="120px"
+              className="card-logo"
+            />
+            <p
+              style={{
+                fontSize: "14px",
+                color: "rgba(255, 255, 255, 0.6)",
+                letterSpacing: "1px",
+                textTransform: "uppercase",
+              }}
+            >
+              {t("Vez de")}{" "}
+              <strong style={{ color: "#ff007f" }}>{player}</strong>
             </p>
           </div>
-          
+
           <div style={{ textAlign: "center" }}>
-            <span style={{ fontSize: "13px", padding: "8px 16px", borderRadius: "20px", background: "rgba(138, 43, 226, 0.2)", border: "1px solid rgba(138, 43, 226, 0.3)", color: "#dfc7ff", textTransform: "uppercase", letterSpacing: "1px" }}>
-              Toque para virar
+            <span
+              style={{
+                fontSize: "13px",
+                padding: "8px 16px",
+                borderRadius: "20px",
+                background: "rgba(138, 43, 226, 0.2)",
+                border: "1px solid rgba(138, 43, 226, 0.3)",
+                color: "#dfc7ff",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+              }}
+            >
+              {t("Toque para virar")}
             </span>
           </div>
         </div>
 
         {/* FRONT SIDE (Revealed - Pink/Black Theme) */}
         <div className="card-front" onClick={(e) => e.stopPropagation()}>
-          <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-            <span style={{ fontSize: "14px", fontWeight: 600, color: "rgba(255, 255, 255, 0.4)", textTransform: "uppercase" }}>
-              Desafio
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "rgba(255, 255, 255, 0.4)",
+                textTransform: "uppercase",
+              }}
+            >
+              {t("Desafio")}
             </span>
-            <Sparkles size={20} color="#ff007f" style={{ filter: "drop-shadow(0 0 5px #ff007f)" }} />
+            <Sparkles
+              size={20}
+              color="#ff007f"
+              style={{ filter: "drop-shadow(0 0 5px #ff007f)" }}
+            />
           </div>
 
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "0 10px" }}>
-            <p style={{ fontSize: "20px", lineHeight: "1.6", fontWeight: 500, color: "#fff", textShadow: "0 2px 10px rgba(0,0,0,0.5)", wordBreak: "break-word" }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "0 10px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "20px",
+                lineHeight: "1.6",
+                fontWeight: 500,
+                color: "#fff",
+                textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                wordBreak: "break-word",
+              }}
+            >
               {content}
             </p>
           </div>
 
-          <div style={{ width: "100%", borderTop: "1px solid rgba(255, 0, 127, 0.2)", paddingTop: "15px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.4)" }}>
-              Jogador: <strong style={{ color: "#ff007f" }}>{player}</strong>
+          <div
+            style={{
+              width: "100%",
+              borderTop: "1px solid rgba(255, 0, 127, 0.2)",
+              paddingTop: "15px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span
+              style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.4)" }}
+            >
+              {t("Jogador:")}{" "}
+              <strong style={{ color: "#ff007f" }}>{player}</strong>
             </span>
-            <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.4)" }}>
+            <span
+              style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.4)" }}
+            >
               #{index + 1}
             </span>
           </div>

@@ -1,17 +1,23 @@
 "use client";
 
+import { useI18n } from "../src/i18n/provider";
+
 import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import GameEngine from "../src/components/GameEngine";
+import { getCapacitor } from "../src/lib/capacitor";
 import { getRandomCards } from "./actions";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const { t, locale } = useI18n();
   const [gameState, setGameState] = useState<"menu" | "playing">("menu");
   const [players, setPlayers] = useState<string[]>([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [cards, setCards] = useState<Array<{ id: string; content: string }>>([]);
+  const [cards, setCards] = useState<Array<{ id: string; content: string }>>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isInputShaking, setIsInputShaking] = useState(false);
@@ -20,42 +26,38 @@ export default function Home() {
   const [isPlayerRewardModalOpen, setIsPlayerRewardModalOpen] = useState(false);
   const [isPlayerRewardLoading, setIsPlayerRewardLoading] = useState(false);
   const [extraPlayersUnlocked, setExtraPlayersUnlocked] = useState(false);
-  const [showLegalConsent, setShowLegalConsent] = useState(() => {
-    if (typeof window === "undefined") return false;
-
-    try {
-      return localStorage.getItem("cards_night_legal_consent_v1") !== "true";
-    } catch {
-      return true;
-    }
-  });
+  const [showLegalConsent, setShowLegalConsent] = useState(false);
   const playerInputRef = useRef<HTMLInputElement>(null);
   const shakeTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        setShowLegalConsent(localStorage.getItem("cards_night_legal_consent_v1") !== "true");
+        setShowLegalConsent(
+          localStorage.getItem("cards_night_legal_consent_v1") !== "true",
+        );
         setExtraPlayersUnlocked(
-          localStorage.getItem("cards_night_extra_players_v1") === "true"
+          localStorage.getItem("cards_night_extra_players_v1") === "true",
         );
       } catch {
         setShowLegalConsent(true);
       }
 
-      const saved = localStorage.getItem("mqp_players");
-      if (saved) {
-        try {
+      try {
+        const saved = localStorage.getItem("mqp_players");
+        if (saved) {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) {
+          if (
+            Array.isArray(parsed) &&
+            parsed.every((player) => typeof player === "string")
+          ) {
             setPlayers(parsed);
           } else {
             setPlayers([]);
           }
-        } catch (e) {
-          console.error("Failed to parse players from localStorage", e);
-          setPlayers([]);
         }
+      } catch (e) {
+        console.error("Failed to load players from localStorage", e);
       }
     }
   }, []);
@@ -87,17 +89,17 @@ export default function Home() {
   // Initialize AdMob, show Interstitial Ad on App Open, and prepare Rewarded Video
   useEffect(() => {
     const initAdMob = async () => {
-      const cap = (window as any).Capacitor;
+      const cap = getCapacitor();
       if (cap && cap.Plugins && cap.Plugins.AdMob) {
         const AdMob = cap.Plugins.AdMob;
         try {
           await AdMob.initialize();
-          
+
           const isAndroid = cap.getPlatform() === "android";
           const interstitialId = isAndroid
             ? "ca-app-pub-8691674404508428/8379424132"
             : "ca-app-pub-3940256099942544/4411468910";
-          
+
           await AdMob.prepareInterstitial({
             adId: interstitialId,
             isTesting: true,
@@ -105,12 +107,12 @@ export default function Home() {
 
           // Show Interstitial on App Open
           await AdMob.showInterstitial();
-          
+
           // Prepare the REWARDED VIDEO for when the user starts the game
           const rewardedId = isAndroid
             ? "ca-app-pub-8691674404508428/2489517211"
             : "ca-app-pub-3940256099942544/1712485313";
-          
+
           await AdMob.prepareRewardVideoAd({
             adId: rewardedId,
             isTesting: true,
@@ -135,7 +137,7 @@ export default function Home() {
     };
 
     if (typeof window !== "undefined") {
-      if ((window as any).Capacitor) {
+      if (getCapacitor()) {
         initAdMob();
       } else {
         window.addEventListener("capacitorinit", initAdMob);
@@ -158,7 +160,7 @@ export default function Home() {
       return;
     }
     if (players.some((player) => player.toLowerCase() === name.toLowerCase())) {
-      setErrorMsg("Esse nome de jogador já existe.");
+      setErrorMsg(t("Esse nome de jogador já existe."));
       return;
     }
     if (players.length >= 6 && !extraPlayersUnlocked) {
@@ -166,12 +168,12 @@ export default function Home() {
       return;
     }
     if (players.length >= 12) {
-      setErrorMsg("Limite máximo de 12 jogadores atingido.");
+      setErrorMsg(t("Limite máximo de 12 jogadores atingido."));
       return;
     }
     const updated = [...players, name];
     setPlayers(updated);
-    localStorage.setItem("mqp_players", JSON.stringify(updated));
+    savePlayers(updated);
     setNewPlayerName("");
     setErrorMsg("");
   };
@@ -179,8 +181,16 @@ export default function Home() {
   const handleRemovePlayer = (name: string) => {
     const updated = players.filter((p) => p !== name);
     setPlayers(updated);
-    localStorage.setItem("mqp_players", JSON.stringify(updated));
+    savePlayers(updated);
     setErrorMsg("");
+  };
+
+  const savePlayers = (updated: string[]) => {
+    try {
+      localStorage.setItem("mqp_players", JSON.stringify(updated));
+    } catch {
+      // Keep the current session playable when browser storage is unavailable.
+    }
   };
 
   const triggerInputShake = () => {
@@ -189,15 +199,22 @@ export default function Home() {
       window.clearTimeout(shakeTimeoutRef.current);
     }
     requestAnimationFrame(() => setIsInputShaking(true));
-    shakeTimeoutRef.current = window.setTimeout(() => setIsInputShaking(false), 400);
+    shakeTimeoutRef.current = window.setTimeout(
+      () => setIsInputShaking(false),
+      400,
+    );
   };
 
   const proceedToGame = async () => {
     setLoading(true);
     try {
-      const selectedCards = await getRandomCards(30);
+      const selectedCards = await getRandomCards(30, locale);
       if (selectedCards.length < 30) {
-        setErrorMsg("Não há cartas suficientes no banco de dados. Execute a semente primeiro.");
+        setErrorMsg(
+          t(
+            "Não há cartas suficientes no banco de dados. Execute a semente primeiro.",
+          ),
+        );
         setLoading(false);
         return;
       }
@@ -205,7 +222,9 @@ export default function Home() {
       setGameState("playing");
     } catch (e) {
       console.error(e);
-      setErrorMsg("Erro ao iniciar o jogo. Verifique sua conexão com o banco.");
+      setErrorMsg(
+        t("Erro ao iniciar o jogo. Verifique sua conexão com o banco."),
+      );
     } finally {
       setLoading(false);
     }
@@ -213,16 +232,16 @@ export default function Home() {
 
   const handleStartGame = async () => {
     if (players.length < 2) {
-      setErrorMsg("Insira pelo menos 2 jogadores para iniciar.");
+      setErrorMsg(t("Insira pelo menos 2 jogadores para iniciar."));
       triggerInputShake();
       playerInputRef.current?.focus();
       return;
     }
-    
+
     setErrorMsg("");
 
     // Trigger ad confirmation if Capacitor is available
-    const cap = (window as any).Capacitor;
+    const cap = getCapacitor();
     if (cap && cap.Plugins && cap.Plugins.AdMob) {
       setIsPromoAdModalOpen(true);
     } else {
@@ -235,7 +254,7 @@ export default function Home() {
     setIsPromoAdModalOpen(false);
     setLoading(true);
 
-    const cap = (window as any).Capacitor;
+    const cap = getCapacitor();
     if (cap && cap.Plugins && cap.Plugins.AdMob) {
       const AdMob = cap.Plugins.AdMob;
       try {
@@ -264,9 +283,11 @@ export default function Home() {
   };
 
   const handleUnlockExtraPlayers = async () => {
-    const cap = (window as any).Capacitor;
+    const cap = getCapacitor();
     if (!cap?.Plugins?.AdMob) {
-      setErrorMsg("Os vídeos recompensados estão disponíveis no aplicativo.");
+      setErrorMsg(
+        t("Os vídeos recompensados estão disponíveis no aplicativo."),
+      );
       return;
     }
 
@@ -291,7 +312,7 @@ export default function Home() {
           "onRewardedVideoAdReward",
           () => {
             rewardConfirmed = true;
-          }
+          },
         );
       }
 
@@ -301,17 +322,23 @@ export default function Home() {
       }
 
       if (!rewardConfirmed) {
-        setErrorMsg("Assista ao vídeo até o fim para liberar mais jogadores.");
+        setErrorMsg(
+          t("Assista ao vídeo até o fim para liberar mais jogadores."),
+        );
         return;
       }
 
-      localStorage.setItem("cards_night_extra_players_v1", "true");
+      try {
+        localStorage.setItem("cards_night_extra_players_v1", "true");
+      } catch {
+        // The reward still applies to the current session.
+      }
       setExtraPlayersUnlocked(true);
       setIsPlayerRewardModalOpen(false);
-      setErrorMsg("Mais 6 vagas desbloqueadas!");
+      setErrorMsg(t("Mais 6 vagas desbloqueadas!"));
     } catch (error) {
       console.error("Failed to unlock extra player slots:", error);
-      setErrorMsg("Não foi possível iniciar o vídeo. Tente novamente.");
+      setErrorMsg(t("Não foi possível iniciar o vídeo. Tente novamente."));
     } finally {
       if (rewardListener) {
         await rewardListener.remove().catch(() => undefined);
@@ -350,7 +377,7 @@ export default function Home() {
           <header className={styles.homeHeader}>
             <Image
               src="/logo-cards-nigth-transparent.png"
-              alt="Cards Night"
+              alt="Cards After Dark"
               width={340}
               height={340}
               priority
@@ -358,14 +385,16 @@ export default function Home() {
             />
             <h1 className={styles.homeTitle}>
               <span className={styles.homeTitleCards}>CARDS</span>
-              <span className={styles.homeTitleNight}>NIGHT</span>
+              <span className={styles.homeTitleNight}>AFTER DARK</span>
             </h1>
             <p className={styles.homeSubtitle}>
-              O jogo de cartas mais picante e divertido para animar sua noite. Contagens rápidas de 7 segundos e desafios intensos.
+              {t(
+                "O jogo de cartas mais picante e divertido para animar sua noite. Contagens rápidas de 7 segundos e desafios intensos.",
+              )}
             </p>
           </header>
 
-          <section className={styles.playerSection} aria-label="Jogadores">
+          <section className={styles.playerSection} aria-label={t("Jogadores")}>
             <form
               onSubmit={handleAddPlayer}
               className={`${styles.playerInputWrapper} ${isInputShaking ? styles.shakeFeedback : ""}`}
@@ -373,19 +402,19 @@ export default function Home() {
               <input
                 ref={playerInputRef}
                 type="text"
-                placeholder="Nome do jogador..."
+                placeholder={t("Nome do jogador...")}
                 className={styles.playerInput}
                 value={newPlayerName}
                 onChange={(e) => setNewPlayerName(e.target.value)}
                 maxLength={22}
                 autoComplete="off"
-                aria-label="Nome do jogador"
+                aria-label={t("Nome do jogador")}
               />
               <button
                 type="submit"
                 className={styles.addPlayerButton}
-                aria-label="Adicionar jogador"
-                title="Adicionar jogador"
+                aria-label={t("Adicionar jogador")}
+                title={t("Adicionar jogador")}
               >
                 <Plus size={20} />
               </button>
@@ -399,7 +428,7 @@ export default function Home() {
                     type="button"
                     className={styles.removePlayerButton}
                     onClick={() => handleRemovePlayer(player)}
-                    aria-label={`Remover ${player}`}
+                    aria-label={t("Remover {player}", { player })}
                   >
                     <Trash2 size={12} />
                   </button>
@@ -408,13 +437,35 @@ export default function Home() {
             </div>
 
             <div className={styles.minPlayersNotice} aria-live="polite">
-              <span className={`${styles.statusDot} ${players.length >= 2 ? styles.statusReady : styles.statusWaiting}`} />
-              <p className={players.length >= 2 ? styles.statusTextReady : styles.statusTextWaiting}>
+              <span
+                className={`${styles.statusDot} ${players.length >= 2 ? styles.statusReady : styles.statusWaiting}`}
+              />
+              <p
+                className={
+                  players.length >= 2
+                    ? styles.statusTextReady
+                    : styles.statusTextWaiting
+                }
+              >
                 {players.length >= 2
-                  ? `${players.length}/${extraPlayersUnlocked ? 12 : 6} jogadores prontos • ${extraPlayersUnlocked ? "Limite ampliado" : "Assista ao vídeo para adicionar até 12"}`
+                  ? t("{count}/{limit} jogadores prontos • {notice}", {
+                      count: players.length,
+                      limit: extraPlayersUnlocked ? 12 : 6,
+                      notice: extraPlayersUnlocked
+                        ? t("Limite ampliado")
+                        : t("Assista ao vídeo para adicionar até 12"),
+                    })
                   : players.length === 0
-                    ? `Mínimo de 2 jogadores para iniciar • Até ${extraPlayersUnlocked ? 12 : 6}`
-                    : `Adicione mais ${2 - players.length} jogador(es) para iniciar • Até ${extraPlayersUnlocked ? 12 : 6}`}
+                    ? t("Mínimo de 2 jogadores para iniciar • Até {limit}", {
+                        limit: extraPlayersUnlocked ? 12 : 6,
+                      })
+                    : t(
+                        "Adicione mais {count} jogador(es) para iniciar • Até {limit}",
+                        {
+                          count: 2 - players.length,
+                          limit: extraPlayersUnlocked ? 12 : 6,
+                        },
+                      )}
               </p>
             </div>
 
@@ -423,7 +474,7 @@ export default function Home() {
               onClick={handleStartGame}
               disabled={loading}
             >
-              <span>{loading ? "Carregando..." : "Iniciar Jogo"}</span>
+              <span>{loading ? t("Carregando...") : t("Iniciar Jogo")}</span>
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M8 5.14v14l11-7-11-7z" />
               </svg>
@@ -433,19 +484,19 @@ export default function Home() {
 
         <footer className={styles.homeFooter}>
           <a
-            href="https://cardsnigth.blogspot.com/#termos"
+            href="https://cardsafterdark.blogspot.com/p/termos-de-uso.html"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Termos de Uso
+            {t("Termos de Uso")}
           </a>
           <span aria-hidden="true">•</span>
           <a
-            href="https://cardsnigth.blogspot.com/#privacidade"
+            href="https://cardsafterdark.blogspot.com/p/politica-de-privacidade.html"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Política de Privacidade
+            {t("Política de Privacidade")}
           </a>
         </footer>
       </main>
@@ -496,7 +547,7 @@ export default function Home() {
                 lineHeight: 1.25,
               }}
             >
-              Aceite os termos para continuar
+              {t("Aceite os termos para continuar")}
             </h2>
             <p
               style={{
@@ -506,24 +557,25 @@ export default function Home() {
                 lineHeight: 1.55,
               }}
             >
-              Para usar o aplicativo, leia e aceite a{" "}
+              {t("Para usar o aplicativo, leia e aceite a")}{" "}
               <a
-                href="https://cardsnigth.blogspot.com/#privacidade"
+                href="https://cardsafterdark.blogspot.com/p/politica-de-privacidade.html"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#C9A6FF" }}
               >
-                Política de Privacidade
+                {t("Política de Privacidade")}
               </a>{" "}
-              e os{" "}
+              {t("e os")}{" "}
               <a
-                href="https://cardsnigth.blogspot.com/#termos"
+                href="https://cardsafterdark.blogspot.com/p/termos-de-uso.html"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#C9A6FF" }}
               >
-                Termos de Uso
-              </a>.
+                {t("Termos de Uso")}
+              </a>
+              .
             </p>
             <button
               type="button"
@@ -536,7 +588,7 @@ export default function Home() {
                 fontFamily: "var(--font-home-jakarta), sans-serif",
               }}
             >
-              Aceitar termos
+              {t("Aceitar termos")}
             </button>
           </div>
         </div>
@@ -584,7 +636,7 @@ export default function Home() {
                 letterSpacing: "1px",
               }}
             >
-              Mais 6 jogadores
+              {t("Mais 6 jogadores")}
             </h2>
             <p
               style={{
@@ -593,7 +645,9 @@ export default function Home() {
                 lineHeight: 1.6,
               }}
             >
-              Você atingiu o limite de 6 jogadores. Assista ao vídeo recompensado até o fim para adicionar mais 6 e chegar ao limite de 12.
+              {t(
+                "Você atingiu o limite de 6 jogadores. Assista ao vídeo recompensado até o fim para adicionar mais 6 e chegar ao limite de 12.",
+              )}
             </p>
             <div style={{ display: "flex", gap: "10px" }}>
               <button
@@ -603,7 +657,9 @@ export default function Home() {
                 style={{ flex: 1, minHeight: "52px", justifyContent: "center" }}
                 onClick={handleUnlockExtraPlayers}
               >
-                {isPlayerRewardLoading ? "Abrindo vídeo..." : "Assistir vídeo"}
+                {isPlayerRewardLoading
+                  ? t("Abrindo vídeo...")
+                  : t("Assistir vídeo")}
               </button>
               <button
                 type="button"
@@ -621,7 +677,7 @@ export default function Home() {
                 }}
                 onClick={() => setIsPlayerRewardModalOpen(false)}
               >
-                Voltar
+                {t("Voltar")}
               </button>
             </div>
           </div>
@@ -630,46 +686,74 @@ export default function Home() {
 
       {/* PROMO AD MODAL */}
       {isPromoAdModalOpen && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100dvh",
-          backgroundColor: "rgba(3, 2, 6, 0.9)",
-          zIndex: 9998,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px"
-        }}>
-          <div className="glass-container" style={{
-            width: "100%",
-            maxWidth: "420px",
-            textAlign: "center",
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100dvh",
+            backgroundColor: "rgba(3, 2, 6, 0.9)",
+            zIndex: 9998,
             display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            padding: "30px",
-            border: "1px solid rgba(138, 43, 226, 0.3)",
-            boxShadow: "0 0 30px rgba(138, 43, 226, 0.2)",
-            background: "rgba(20, 10, 35, 0.75)",
-            backdropFilter: "blur(20px)",
-            borderRadius: "16px"
-          }}>
-            <h2 style={{ fontSize: "22px", fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "1px", margin: 0 }}>
-              Vídeo Promocional
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "20px",
+          }}
+        >
+          <div
+            className="glass-container"
+            style={{
+              width: "100%",
+              maxWidth: "420px",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              padding: "30px",
+              border: "1px solid rgba(138, 43, 226, 0.3)",
+              boxShadow: "0 0 30px rgba(138, 43, 226, 0.2)",
+              background: "rgba(20, 10, 35, 0.75)",
+              backdropFilter: "blur(20px)",
+              borderRadius: "16px",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "22px",
+                fontWeight: 800,
+                color: "#fff",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                margin: 0,
+              }}
+            >
+              {t("Vídeo Promocional")}
             </h2>
-            <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              Para iniciar o jogo, você assistirá a um breve vídeo promocional. Isso nos ajuda a manter o aplicativo gratuito!
+            <p
+              style={{
+                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "14px",
+                lineHeight: "1.6",
+                margin: 0,
+              }}
+            >
+              {t(
+                "Para iniciar o jogo, você assistirá a um breve vídeo promocional. Isso nos ajuda a manter o aplicativo gratuito!",
+              )}
             </p>
             <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
               <button
                 className="btn-neon"
-                style={{ flex: 1, padding: "14px", fontSize: "16px", fontWeight: 700 }}
+                style={{
+                  flex: 1,
+                  padding: "14px",
+                  fontSize: "16px",
+                  fontWeight: 700,
+                }}
                 onClick={handleShowRewardedAd}
               >
-                Assistir e Jogar
+                {t("Assistir e Jogar")}
               </button>
               <button
                 type="button"
@@ -682,17 +766,16 @@ export default function Home() {
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   color: "rgba(255,255,255,0.6)",
                   borderRadius: "8px",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 onClick={() => setIsPromoAdModalOpen(false)}
               >
-                Voltar
+                {t("Voltar")}
               </button>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
